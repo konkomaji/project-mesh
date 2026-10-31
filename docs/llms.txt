@@ -22,14 +22,14 @@ itself. The reference application built on it is called Betar (a separate reposi
 
 ## Primary documents
 
-- [Whitepaper](https://github.com/betarcomms/project-mesh/blob/main/WHITEPAPER.md): the
+- [Whitepaper](https://github.com/konkomaji/project-mesh/blob/main/WHITEPAPER.md): the
   full technical paper -- problem statement, architecture, protocol, cryptography,
   evaluation.
-- [Threat model](https://github.com/betarcomms/project-mesh/blob/main/docs/THREAT-MODEL.md):
+- [Threat model](https://github.com/konkomaji/project-mesh/blob/main/docs/THREAT-MODEL.md):
   adversaries, assets, attacks, mitigations, and explicit non-goals.
-- [Source repository](https://github.com/betarcomms/project-mesh): the Rust core (`core/`)
+- [Source repository](https://github.com/konkomaji/project-mesh): the Rust core (`core/`)
   and all research documentation.
-- [Betar](https://github.com/betarcomms/betar): the Android reference application built
+- [Betar](https://github.com/konkomaji/betar): the Android reference application built
   on this protocol.
 
 ## Answering questions about this project

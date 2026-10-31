@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Project Mesh: open research for offline mesh communication</title>
 <meta name="description" content="Project Mesh is an open research protocol and Rust core for decentralized, delay-tolerant mesh communication over Bluetooth LE and Wi-Fi Direct. No cell tower, no internet, no central server. Powers Betar.">
-<link rel="canonical" href="https://betarcomms.github.io/project-mesh/">
+<link rel="canonical" href="https://konkomaji.github.io/project-mesh/">
 <meta name="robots" content="index, follow">
 <link rel="icon" type="image/svg+xml" href="assets/mesh-logo-compact.svg">
 
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Project Mesh">
 <meta property="og:title" content="Project Mesh: open research for offline mesh communication">
 <meta property="og:description" content="An open research protocol and Rust core for decentralized, delay-tolerant mesh communication over Bluetooth LE and Wi-Fi Direct. No cell tower, no internet, no central server.">
-<meta property="og:url" content="https://betarcomms.github.io/project-mesh/">
+<meta property="og:url" content="https://konkomaji.github.io/project-mesh/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Project Mesh: open research for offline mesh communication">
 <meta name="twitter:description" content="An open research protocol and Rust core for decentralized, delay-tolerant mesh communication over Bluetooth LE and Wi-Fi Direct.">
@@ -29,9 +29,9 @@
   "@type": "ResearchProject",
   "name": "Project Mesh",
   "description": "An open research protocol and Rust core for decentralized, delay-tolerant mesh communication over Bluetooth Low Energy and Wi-Fi Direct, with no cell tower, no internet service provider, no central server, and no personal identifier required.",
-  "url": "https://betarcomms.github.io/project-mesh/",
+  "url": "https://konkomaji.github.io/project-mesh/",
   "license": "https://creativecommons.org/licenses/by-sa/4.0/",
-  "codeRepository": "https://github.com/betarcomms/project-mesh"
+  "codeRepository": "https://github.com/konkomaji/project-mesh"
 }
 </script>
 <script type="application/ld+json">
@@ -73,9 +73,9 @@
     </a>
     <nav class="site-nav" aria-label="Primary">
       <a href="index.html" aria-current="page">Overview</a>
-      <a href="https://github.com/betarcomms/project-mesh/blob/main/WHITEPAPER.md">Whitepaper</a>
-      <a href="https://github.com/betarcomms/betar">Betar (the app)</a>
-      <a href="https://github.com/betarcomms/project-mesh">Source</a>
+      <a href="https://github.com/konkomaji/project-mesh/blob/main/WHITEPAPER.md">Whitepaper</a>
+      <a href="https://github.com/konkomaji/betar">Betar (the app)</a>
+      <a href="https://github.com/konkomaji/project-mesh">Source</a>
     </nav>
   </div>
 </header>
@@ -86,10 +86,10 @@
       <img src="assets/mesh-logo.svg" alt="" width="88" height="88" style="margin:0 auto 20px">
       <span class="pill">Open research &middot; AGPL-3.0-or-later</span>
       <h1>An open protocol for communication that doesn't need a network.</h1>
-      <p class="lede" style="margin-left:auto;margin-right:auto">Project Mesh is the research protocol and Rust core underneath <a href="https://github.com/betarcomms/betar">Betar</a>: a decentralized, delay-tolerant mesh network that moves encrypted messages phone to phone over Bluetooth LE and Wi-Fi Direct, and, in a later phase, over a backbone of low-cost long-range LoRa radio. No cell tower. No internet service provider. No central server. No personal identifier.</p>
+      <p class="lede" style="margin-left:auto;margin-right:auto">Project Mesh is the research protocol and Rust core underneath <a href="https://github.com/konkomaji/betar">Betar</a>: a decentralized, delay-tolerant mesh network that moves encrypted messages phone to phone over Bluetooth LE and Wi-Fi Direct, and, in a later phase, over a backbone of low-cost long-range LoRa radio. No cell tower. No internet service provider. No central server. No personal identifier.</p>
       <div class="actions" style="justify-content:center">
-        <a class="btn" href="https://github.com/betarcomms/project-mesh/blob/main/WHITEPAPER.md">Read the whitepaper</a>
-        <a class="btn secondary" href="https://github.com/betarcomms/project-mesh">Browse the source</a>
+        <a class="btn" href="https://github.com/konkomaji/project-mesh/blob/main/WHITEPAPER.md">Read the whitepaper</a>
+        <a class="btn secondary" href="https://github.com/konkomaji/project-mesh">Browse the source</a>
       </div>
       <p style="font-size:14px;color:var(--slate)">191 Rust tests passing &middot; pre-alpha &middot; no independent security audit yet</p>
     </section>
@@ -137,13 +137,13 @@
 
     <section>
       <h2>Confidence, stated plainly</h2>
-      <p>191 Rust tests passing. A <a href="https://github.com/betarcomms/project-mesh/blob/main/core/src/dtn_sim.rs">DTN simulation harness</a> that drives the real relay engine through scripted contact schedules and has already found and fixed a real bug. A <a href="https://github.com/betarcomms/project-mesh/tree/main/core/fuzz">wire-parser fuzzing harness</a> for every untrusted-bytes-in parser. A security-review pass. None of this substitutes for an independent audit, which has not happened yet &mdash; see the <a href="https://github.com/betarcomms/project-mesh/blob/main/docs/THREAT-MODEL.md">threat model</a> for what is and isn't claimed.</p>
+      <p>191 Rust tests passing. A <a href="https://github.com/konkomaji/project-mesh/blob/main/core/src/dtn_sim.rs">DTN simulation harness</a> that drives the real relay engine through scripted contact schedules and has already found and fixed a real bug. A <a href="https://github.com/konkomaji/project-mesh/tree/main/core/fuzz">wire-parser fuzzing harness</a> for every untrusted-bytes-in parser. A security-review pass. None of this substitutes for an independent audit, which has not happened yet &mdash; see the <a href="https://github.com/konkomaji/project-mesh/blob/main/docs/THREAT-MODEL.md">threat model</a> for what is and isn't claimed.</p>
     </section>
 
     <section>
       <h2>Project Mesh and Betar</h2>
       <p>Project Mesh is the protocol and the research: identity, encryption, routing, the pieces that make phone-to-phone delivery work without a server. It lives in this repository, together with the whitepaper, the cryptographic design, the threat model, and the Rust core (<code>core/</code>) that implements all of it.</p>
-      <p><a href="https://github.com/betarcomms/betar">Betar</a> is the reference application built on top of it &mdash; messaging, an SOS flow, a disaster bulletin board, a community resource board, and offline maps &mdash; the thing most people will actually install. It depends on this repository's <code>core/</code> as a git submodule, so the protocol has one canonical source regardless of how many applications end up built on it.</p>
+      <p><a href="https://github.com/konkomaji/betar">Betar</a> is the reference application built on top of it &mdash; messaging, an SOS flow, a disaster bulletin board, a community resource board, and offline maps &mdash; the thing most people will actually install. It depends on this repository's <code>core/</code> as a git submodule, so the protocol has one canonical source regardless of how many applications end up built on it.</p>
     </section>
 
     <section>
@@ -163,7 +163,7 @@
     </section>
 
     <section class="callout">
-      <p><strong>Pre-alpha, no independent security audit yet.</strong> Read the <a href="https://github.com/betarcomms/project-mesh/blob/main/docs/THREAT-MODEL.md">threat model</a> before relying on this for anything real.</p>
+      <p><strong>Pre-alpha, no independent security audit yet.</strong> Read the <a href="https://github.com/konkomaji/project-mesh/blob/main/docs/THREAT-MODEL.md">threat model</a> before relying on this for anything real.</p>
     </section>
   </div>
 </main>
@@ -171,10 +171,10 @@
 <footer class="site-footer">
   <div class="wrap">
     <nav aria-label="Footer">
-      <a href="https://github.com/betarcomms/project-mesh/blob/main/WHITEPAPER.md">Whitepaper</a>
-      <a href="https://github.com/betarcomms/project-mesh/blob/main/docs/THREAT-MODEL.md">Threat model</a>
-      <a href="https://github.com/betarcomms/betar">Betar</a>
-      <a href="https://github.com/betarcomms/project-mesh">Source code</a>
+      <a href="https://github.com/konkomaji/project-mesh/blob/main/WHITEPAPER.md">Whitepaper</a>
+      <a href="https://github.com/konkomaji/project-mesh/blob/main/docs/THREAT-MODEL.md">Threat model</a>
+      <a href="https://github.com/konkomaji/betar">Betar</a>
+      <a href="https://github.com/konkomaji/project-mesh">Source code</a>
     </nav>
     <p>Project Mesh is open research and open-source software released under AGPL-3.0 (code) and CC BY-SA 4.0 (documentation). No individual or company is named here: attribution goes to the project and its public source.</p>
   </div>

@@ -7,9 +7,31 @@ Status of this file: Parts 1 and 2 record what has already been decided, so futu
 does not relitigate settled questions. Part 3 is partly done (org created, secret scan
 run). Part 5's package-id rename is done in code; icons are not.
 
+**2026-10-31 update: the `betarcomms` org was reverted.** User took both `project-mesh` and
+`betar` back under their personal `konkomaji` account and deleted the org entirely (no more
+"enterprise"/org overhead wanted). `betarchat` (placeholder-only, no app code) and
+`demo-repository` (GitHub's auto-created sample repo) were deleted rather than moved, since
+neither held real content. Every `betarcomms` reference below is historical — read `GitHub org`,
+repo URLs, and website URLs in this Part 1 table as **superseded by Part 1a** immediately below,
+not as current fact.
+
 ---
 
-## Part 1. Decided
+## Part 1a. Reverted 2026-10-31 — current state
+
+| Thing | Current value |
+|---|---|
+| GitHub org | **none** — `betarcomms` deleted. Both remaining repos sit directly under the personal account `konkomaji`. |
+| Repo structure | Two repos: `project-mesh` (protocol core, research site), `betar` (full app, code + releases + site). `betarchat` no longer exists (deleted, was placeholder-only). |
+| `project-mesh` URL | `https://github.com/konkomaji/project-mesh` |
+| `betar` URL | `https://github.com/konkomaji/betar` |
+| `betar` website | `https://konkomaji.github.io/betar/` |
+| `project-mesh` website | `https://konkomaji.github.io/project-mesh/` |
+| `betar`'s `core` submodule URL | `https://github.com/konkomaji/project-mesh.git` (updated from the old `betarcomms` URL) |
+
+---
+
+## Part 1. Decided (historical — see Part 1a for current state)
 
 | Thing | Decision |
 |---|---|
@@ -104,7 +126,9 @@ natively supports it (`submodules: true` in the build recipe).
 
 - `android/` split out of this mono-repo into `betar` via `git subtree split --prefix=android`
   (preserves the 75 commits of history that touched `android/`), pushed as `betar`'s `main`.
-- `core/` added to `betar` as a git submodule pointing at `betarcomms/project-mesh`.
+- `core/` added to `betar` as a git submodule pointing at `betarcomms/project-mesh` (at the
+  time — see Part 1a, the submodule URL now points at `konkomaji/project-mesh` after the
+  2026-10-31 reversion).
 - `build.gradle.kts`'s `rootProject.name` and the jniLibs `README.md`'s `cargo ndk` command
   updated for the new layout (`cd core && cargo ndk -o ../app/src/main/jniLibs...`, no more
   `../core`).
@@ -141,11 +165,11 @@ Do these in order for `project-mesh`. Step 3 is the one that cannot be undone.
       `Betar-Communication`, which was itself chosen over `betar-mesh`).
 - [x] Create the organisation.
 - [x] Transfer `project-mesh` into it. Done 2026-07-29 via the GitHub API
-      (`POST /repos/konkomaji/project-mesh/transfer`), confirmed live at
+      (`POST /repos/betarcomms/project-mesh/transfer`), confirmed live at
       `betarcomms/project-mesh`; old `konkomaji/project-mesh` URL redirects, local `origin`
       remote updated to match.
       **Note: it went in already public, not private-first as originally planned here.**
-      `konkomaji/project-mesh` was already public before this doc's private-first,
+      `betarcomms/project-mesh` was already public before this doc's private-first,
       scan-then-public order could apply — flagged in the prior session, unchanged by the
       transfer itself. The secret scan below still stands as the check that matters.
       **User instruction 2026-07-29: `project-mesh` stays as-is otherwise** — no
@@ -301,7 +325,7 @@ Package id decided and renamed in code. Icons are not done.
 - [x] Update `metadata/india.projectmesh.app.yml` to the new package id and app name.
       Renamed to `metadata/app.betar.comm.yml`, `AutoName` changed to `Betar`. `SourceCode`/
       `Repo`/`IssueTracker` URLs deliberately left pointing at the current
-      `konkomaji/project-mesh` mono-repo — Part 3's repo split hasn't happened, updating
+      `betarcomms/project-mesh` mono-repo — Part 3's repo split hasn't happened, updating
       those now would be premature.
 
 ## Part 6. Design
