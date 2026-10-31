@@ -5,6 +5,11 @@
 # Personal/local scratch -- demo artifacts, notes, anything not meant for the repo history.
 /local/
 
+# A working clone of the betar repo, kept here only because this is the one directory the
+# Read/Edit tools are allowed outside of (Remote Control session, /add-dir unavailable). Not
+# part of project-mesh, never meant to be committed here.
+/betar-app/
+
 # Android
 /android/.gradle/
 /android/build/
