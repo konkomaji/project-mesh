@@ -9,12 +9,12 @@
 //! logic is needed. A relay sees only `sealed.len()`, which reveals the bucket, not the true
 //! content length.
 //!
-//! **Bucket sizes are reasoned, not benchmarked or field-tested against real traffic mixes** —
+//! **Bucket sizes are reasoned, not benchmarked or field-tested against real traffic mixes**,
 //! same honest caveat this crate already states for rate limits, client-puzzle difficulty, and
-//! Argon2id parameters. Chosen as a rough log-ish progression covering short text (SOS/bulletin
-//! category codes, short chat) through voice-note-sized payloads; large media is expected to
-//! prefer Wi-Fi Direct per `docs/FEATURES.md` §6, not BLE-carried envelopes, so no multi-MB
-//! bucket is included here.
+//! Argon2id parameters. Chosen as a rough log-ish progression covering short text (category
+//! codes, short chat, a Community Note) through voice-note-sized payloads; large media is
+//! expected to prefer Wi-Fi Direct per `docs/FEATURES.md` §6, not BLE-carried envelopes, so no
+//! multi-MB bucket is included here.
 
 use crate::error::{MeshError, Result};
 

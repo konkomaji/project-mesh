@@ -565,8 +565,8 @@ pub(crate) fn hex_to_id(hex: &str) -> Option<EnvelopeId> {
 }
 
 /// Construct wire-format envelope bytes. `addressing_tag`: 0=Broadcast, 1=Channel, 2=Group,
-/// 3=Direct (the latter three require a 32-byte `addressing_target`). `priority_tag`: 0=Sos,
-/// 1=Bulletin, 2=Normal, 3=Low.
+/// 3=Direct (the latter three require a 32-byte `addressing_target`). `priority_tag`: 0=Urgent,
+/// 1=Elevated, 2=Normal, 3=Low.
 #[uniffi::export]
 pub fn envelope_pack(
     addressing_tag: u8,
@@ -641,8 +641,8 @@ fn encode_addressing(a: Addressing) -> (u8, Option<Vec<u8>>) {
 
 pub(crate) fn decode_priority(tag: u8) -> Result<Priority, FfiError> {
     match tag {
-        0 => Ok(Priority::Sos),
-        1 => Ok(Priority::Bulletin),
+        0 => Ok(Priority::Urgent),
+        1 => Ok(Priority::Elevated),
         2 => Ok(Priority::Normal),
         3 => Ok(Priority::Low),
         _ => Err(FfiError::Malformed("unknown priority tag".into())),
@@ -730,12 +730,12 @@ mod tests {
     #[test]
     fn envelope_pack_unpack_roundtrip_via_ffi() {
         let target = vec![9u8; 32];
-        let bytes = envelope_pack(3, Some(target.clone()), 0, 4, 1_000_000_000, b"sos".to_vec()).unwrap();
+        let bytes = envelope_pack(3, Some(target.clone()), 0, 4, 1_000_000_000, b"urgent".to_vec()).unwrap();
         let parsed = envelope_unpack(bytes).unwrap();
         assert_eq!(parsed.addressing_tag, 3);
         assert_eq!(parsed.addressing_target, Some(target));
         assert_eq!(parsed.priority_tag, 0);
-        assert_eq!(parsed.sealed, b"sos");
+        assert_eq!(parsed.sealed, b"urgent");
         assert_eq!(parsed.id_hex.len(), 64);
     }
 
@@ -875,18 +875,18 @@ mod tests {
         let key = vec![10u8; 32];
         let low = envelope_pack(0, None, 3, 8, 9_999_999_999, b"low".to_vec()).unwrap();
         let low_id = envelope_unpack(low.clone()).unwrap().id_hex;
-        let sos = envelope_pack(0, None, 0, 8, 9_999_999_999, b"sos".to_vec()).unwrap();
-        let sos_id = envelope_unpack(sos.clone()).unwrap().id_hex;
+        let urgent = envelope_pack(0, None, 0, 8, 9_999_999_999, b"urgent".to_vec()).unwrap();
+        let urgent_id = envelope_unpack(urgent.clone()).unwrap().id_hex;
 
         {
             let store = FfiDurableStore::open(path.clone(), key.clone(), 1, 0).unwrap();
             store.accept(low, 0).unwrap();
-            store.accept(sos, 0).unwrap(); // evicts `low`, capacity is 1
+            store.accept(urgent, 0).unwrap(); // evicts `low`, capacity is 1
         }
 
         let reopened = FfiDurableStore::open(path.clone(), key, 10, 0).unwrap();
         assert_eq!(reopened.len(), 1);
-        assert!(reopened.contains_hex(sos_id));
+        assert!(reopened.contains_hex(urgent_id));
         assert!(!reopened.contains_hex(low_id));
 
         let _ = std::fs::remove_file(&path);

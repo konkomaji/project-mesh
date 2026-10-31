@@ -1,15 +1,15 @@
 //! Client puzzle: lightweight proof-of-work raising the cost of mass-producing distinct
-//! envelopes, per `docs/ROUTING-PROTOCOL.md` §4.5. Hashcash-style — expensive to solve, cheap
+//! envelopes, per `docs/ROUTING-PROTOCOL.md` §4.5. Hashcash-style: expensive to solve, cheap
 //! (one hash) to verify, so it burdens a flood far more than the handful of messages a real
 //! person sends.
 //!
-//! **Deviation from the doc, stated plainly:** §4.5 describes the puzzle as "bound to
+//! **Deviation from the doc, stated plainly:** §4.5 used to describe the puzzle as "bound to
 //! `envelope_id` and `created_at`". This crate's [`crate::envelope::Envelope`] has no
-//! `created_at` field (only `expires_at` — see `docs/ROUTING-PROTOCOL.md` §2's conceptual
-//! layout vs. this implementation's actual wire format). Since `envelope_id` is already
-//! content-derived over every field the envelope carries, binding the puzzle to `envelope_id`
-//! alone still commits it to the full envelope content; a `created_at` field would only help if
-//! it existed to bind against. Revisit if `created_at` is ever added.
+//! `created_at` field, only `expires_at` (see `docs/ROUTING-PROTOCOL.md` §2 for the real wire
+//! format). Since `envelope_id` is already content-derived over every field the envelope
+//! carries, binding the puzzle to `envelope_id` alone still commits it to the full envelope
+//! content; a `created_at` field would only help if it existed to bind against. §4.5 has been
+//! corrected to match. Revisit if `created_at` is ever added.
 //!
 //! **Deliberately not part of `Envelope`'s own wire format:** the puzzle proof travels alongside
 //! the envelope in [`crate::relay::ContactMessage::Data`], not inside `Envelope::to_bytes()`.

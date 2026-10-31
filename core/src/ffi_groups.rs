@@ -210,7 +210,7 @@ impl FfiMlsGroupHandle {
     /// hand straight to `FfiMeshNode::compose_local` — same design as `FfiChannel::seal` +
     /// `envelope_pack` (`ffi.rs`), except the envelope construction happens here since
     /// `Addressing::Group`'s selector is derived from live group state, not a passphrase.
-    /// `priority_tag`: 0=Sos, 1=Bulletin, 2=Normal, 3=Low (matches `envelope_pack`'s tags).
+    /// `priority_tag`: 0=Urgent, 1=Elevated, 2=Normal, 3=Low (matches `envelope_pack`'s tags).
     pub fn seal_as_envelope(
         &self,
         plaintext: Vec<u8>,

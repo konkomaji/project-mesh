@@ -47,13 +47,21 @@ impl Addressing {
     }
 }
 
-/// Emergency traffic is prioritized by the routing engine over ordinary messaging
-/// (`docs/ROUTING-PROTOCOL.md` §7.2). Lower ordinal = higher priority = evicted last.
+/// Delivery priority, independent of `Addressing`. The routing engine evicts lower-priority
+/// envelopes first under storage pressure (`docs/ROUTING-PROTOCOL.md` §7.2).
+/// Lower ordinal = higher priority = evicted last.
+///
+/// Renamed 2026-11-01 from `Sos`/`Bulletin` to `Urgent`/`Elevated`: those names named a specific
+/// cut feature (the SOS button, the disaster bulletin board), not the priority mechanism itself.
+/// The tag values and eviction behavior are unchanged, this is a rename only. `Elevated` is the
+/// tier Community Notes use, since a fact-check correction should resist eviction and propagate
+/// ahead of ordinary chat/feed traffic the same way a bulletin used to. `Urgent` is unclaimed by
+/// any current feature, reserved as the top tier for whatever needs it next.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug)]
 #[repr(u8)]
 pub enum Priority {
-    Sos = 0,
-    Bulletin = 1,
+    Urgent = 0,
+    Elevated = 1,
     Normal = 2,
     Low = 3,
 }
@@ -61,8 +69,8 @@ pub enum Priority {
 impl Priority {
     fn from_tag(tag: u8) -> Result<Self> {
         match tag {
-            0 => Ok(Priority::Sos),
-            1 => Ok(Priority::Bulletin),
+            0 => Ok(Priority::Urgent),
+            1 => Ok(Priority::Elevated),
             2 => Ok(Priority::Normal),
             3 => Ok(Priority::Low),
             _ => Err(MeshError::Malformed("unknown priority tag")),
@@ -271,7 +279,7 @@ mod tests {
 
     #[test]
     fn broadcast_addressing_has_no_target_bytes() {
-        let env = Envelope::new(Addressing::Broadcast, Priority::Sos, 4, 100, vec![1, 2, 3]);
+        let env = Envelope::new(Addressing::Broadcast, Priority::Urgent, 4, 100, vec![1, 2, 3]);
         let bytes = env.to_bytes();
         // version(1) + tag(1) + priority(1) + ttl(1) + expiry(8) + len(4) + payload(3)
         assert_eq!(bytes.len(), 1 + 1 + 1 + 1 + 8 + 4 + 3);
@@ -280,9 +288,9 @@ mod tests {
     }
 
     #[test]
-    fn priority_ordering_matches_docs_sos_highest() {
-        assert!(Priority::Sos < Priority::Bulletin);
-        assert!(Priority::Bulletin < Priority::Normal);
+    fn priority_ordering_matches_docs_urgent_highest() {
+        assert!(Priority::Urgent < Priority::Elevated);
+        assert!(Priority::Elevated < Priority::Normal);
         assert!(Priority::Normal < Priority::Low);
     }
 

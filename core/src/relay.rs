@@ -288,7 +288,7 @@ impl RelayEngine {
         Ok(outbound)
     }
 
-    /// Accept a locally-originated envelope (the user composed a message, an SOS, etc.), solve
+    /// Accept a locally-originated envelope (the user composed a message, a post, etc.), solve
     /// its client puzzle (a no-op at difficulty 0), and flood it to every currently-connected
     /// peer.
     pub fn compose_local(&mut self, envelope: Envelope, now: u64) -> Result<(Accept, Vec<(u64, Vec<u8>)>)> {
@@ -473,7 +473,7 @@ mod tests {
         b.on_peer_connected(2); // B's handle for C
         c.on_peer_connected(200); // C's handle for B
 
-        let e = env(Priority::Bulletin, 8, 42);
+        let e = env(Priority::Elevated, 8, 42);
         let (outcome, outbound) = a.compose_local(e.clone(), 0).unwrap();
         assert_eq!(outcome, Accept::New);
         assert_eq!(outbound.len(), 1); // only one peer (B) connected to A

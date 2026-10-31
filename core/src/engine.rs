@@ -63,7 +63,7 @@ impl Store {
     }
 
     /// Offer an envelope to the store. Enforces dedup (content-derived ID), expiry, TTL, and
-    /// bounded-capacity priority eviction (`docs/ROUTING-PROTOCOL.md` §7.2). Emergency (SOS)
+    /// bounded-capacity priority eviction (`docs/ROUTING-PROTOCOL.md` §7.2). `Urgent`
     /// traffic is never evicted to make room for lower-priority traffic.
     ///
     /// Returns the outcome plus the ID of any envelope evicted to make room for this one, so a
@@ -239,12 +239,12 @@ mod tests {
         let low_id = low.id;
         assert_eq!(store.accept(low, 0), (Accept::New, None));
         assert_eq!(store.accept(env(Priority::Normal, 5, 1000, 2), 0), (Accept::New, None));
-        // Store full; SOS must evict the Low-priority entry, not be refused.
-        let sos = env(Priority::Sos, 5, 1000, 3);
-        let (outcome, evicted) = store.accept(sos.clone(), 0);
+        // Store full; Urgent must evict the Low-priority entry, not be refused.
+        let urgent = env(Priority::Urgent, 5, 1000, 3);
+        let (outcome, evicted) = store.accept(urgent.clone(), 0);
         assert_eq!(outcome, Accept::New);
         assert_eq!(evicted, Some(low_id));
-        assert!(store.contains(&sos.id));
+        assert!(store.contains(&urgent.id));
         assert!(!store.contains(&low_id));
         assert_eq!(store.len(), 2);
     }
@@ -252,7 +252,7 @@ mod tests {
     #[test]
     fn refuses_lower_priority_when_full_rather_than_evict_for_no_gain() {
         let mut store = Store::new(1);
-        assert_eq!(store.accept(env(Priority::Sos, 5, 1000, 1), 0), (Accept::New, None));
+        assert_eq!(store.accept(env(Priority::Urgent, 5, 1000, 1), 0), (Accept::New, None));
         let low = env(Priority::Low, 5, 1000, 2);
         assert_eq!(store.accept(low, 0), (Accept::StoreFullLowerPriority, None));
         assert_eq!(store.len(), 1);

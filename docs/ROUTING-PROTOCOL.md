@@ -28,17 +28,18 @@ An **envelope** is the unit of storage and transfer. Application data is always 
 routing header they need.
 
 ```
-Envelope (conceptual layout)
+Envelope (matches core/src/envelope.rs as implemented)
 ┌───────────────────────────────────────────────────────────────┐
 │ version           u8                                           │
-│ envelope_id       32 bytes   (content-derived, e.g. BLAKE3)    │  ← dedup key
-│ class             u8         (DIRECT | GROUP | CHANNEL |        │
-│                               BROADCAST | POST | NOTE)          │  ← priority hint only
-│ created_at        u64        (coarse timestamp, minutes)       │
-│ expires_at        u64        (absolute expiry)                 │  ← TTL (time)
+│ envelope_id       32 bytes   (content-derived, BLAKE3)         │  ← dedup key
+│ addressing_tag    u8         (0 Broadcast | 1 Channel |         │
+│                               2 Group | 3 Direct)                │
+│ addressing_target 32 bytes?  (present for Channel/Group/Direct, │
+│                               absent for Broadcast)              │
+│ priority_tag      u8         (0 Urgent | 1 Elevated |            │
+│                               2 Normal | 3 Low)                  │
 │ hops_remaining    u8         (decremented per relay)           │  ← TTL (hops)
-│ size_bucket       u8         (padding bucket, hides true size) │
-│ routing_tag       opt        (onion header OR channel selector)│
+│ expires_at        u64        (absolute expiry)                 │  ← TTL (time)
 │ sealed_payload    bytes      (AEAD ciphertext; opaque to relays)│
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -47,11 +48,23 @@ Notes:
 
 - **`envelope_id`** is derived from the sealed content, so it is stable, self-certifying against
   accidental corruption, and usable as the deduplication key.
-- **`class`** gives relays a *priority* hint (direct and group messages first) but never reveals
-  plaintext. Optionally, class can be coarsened or hidden for higher metadata protection at some
-  routing-efficiency cost.
-- **`routing_tag`** carries either a channel selector (for channel traffic) or a Sphinx onion
-  header (for onion-routed direct messages); for plain broadcast it is empty.
+- **`addressing_tag`** is the routing class: who the envelope is for. It never reveals
+  plaintext. `priority_tag` is a separate axis, the relay-eviction urgency: lower ordinal is
+  higher priority and evicted last under storage pressure (`envelope.rs`'s `Priority` enum).
+  `Elevated` is the tier Community Notes use, so a fact-check correction resists eviction and
+  propagates ahead of ordinary traffic. `Urgent` is unclaimed by any current feature, the top
+  tier reserved for whatever needs it next.
+- **What a post or a Community Note *is*, versus a chat message, lives inside the sealed
+  payload, not in the envelope header.** The routing layer only ever sees `addressing_tag` and
+  `priority_tag`; it never inspects or needs to know the sealed content's shape, by design, the
+  same way it can't distinguish one Direct message's content from another's. Feed posts and
+  Community Notes are not implemented in `core/` yet; when they are, this section needs a real
+  update once their actual addressing choice (likely Broadcast for the local-mesh tier, a
+  Channel-like geohash selector for the relay tier) is designed and built, not guessed at here
+  ahead of that work.
+- A channel selector or a Sphinx onion header (for future onion-routed Direct messages) would
+  need its own wire field if implemented; neither exists in `core/` yet, so neither is in the
+  diagram above. Don't add speculative fields for unbuilt features.
 
 ## 3. Contact exchange protocol
 
@@ -64,13 +77,13 @@ A → B :  SUMMARY {bloom_filter_of_A_envelope_ids, high_water}
 B → A :  SUMMARY {bloom_filter_of_B_envelope_ids, high_water}
 A → B :  WANT {ids A lacks that B appears to have}   (from B's summary)
 B → A :  WANT {ids B lacks that A appears to have}
-A ⇄ B :  DATA {requested envelopes, priority-ordered: direct/group → post → note → …}
+A ⇄ B :  DATA {requested envelopes, ordered by priority_tag: Urgent → Elevated → Normal → Low}
 ```
 
 - **Summary vectors** are **Bloom filters** (compact, false-positive-only) plus a small explicit
   recent-ID list to bound false positives on hot items.
-- Transfers are **priority-ordered** so that in a short or lossy contact window, real-time
-  chat traffic moves first.
+- Transfers are **priority-ordered** by `priority_tag` so that in a short or lossy contact
+  window, the highest-priority envelopes move first, whatever they contain.
 - Both sides enforce all controls in §4 on every accepted envelope.
 
 ## 4. Flood and abuse controls
@@ -80,7 +93,7 @@ Naïve epidemic routing is expensive and trivially floodable. Controls:
 ### 4.1 Time and hop TTL
 - Every envelope has `expires_at` (absolute) and `hops_remaining`. A node **drops** any envelope
   that is expired or has zero hops remaining, and never forwards it. *(tunable: default expiry
-  e.g. 24–72 h by class; default max hops e.g. 16–32.)*
+  e.g. 24–72 h; default max hops e.g. 16–32.)*
 
 ### 4.2 Deduplication
 - A node maintains a **seen-set** (Bloom filter + bounded LRU of exact IDs). It never re-accepts,
@@ -97,11 +110,15 @@ Naïve epidemic routing is expensive and trivially floodable. Controls:
   saturating a node.
 
 ### 4.5 Sybil / injection resistance (lightweight)
-- Optional **client puzzle** (small proof-of-work) bound to `envelope_id` and `created_at`,
-  raising the cost of mass-producing distinct envelopes. Calibrated to be negligible for a human
-  sending a message and expensive for a flood. *(tunable / optional.)*
-- Per-identity signing on non-anonymous classes (e.g. signed posts) lets nodes locally
-  rate-limit or block abusive keys without any central coordinator.
+- Optional **client puzzle** (small proof-of-work) bound to `envelope_id`, raising the cost of
+  mass-producing distinct envelopes. `envelope_id` is itself content-derived over the whole
+  envelope, so binding to it alone already commits the puzzle to the full content; no separate
+  timestamp field exists to bind against (`core/src/puzzle.rs` explains this in detail).
+  Calibrated to be negligible for a human sending a message and expensive for a flood.
+  *(tunable / optional.)*
+- Per-identity signing on non-anonymous addressing modes (Direct, Group, and signed Channel
+  traffic, where the sender already reveals a fingerprint to make delivery possible) lets nodes
+  locally rate-limit or block abusive keys without any central coordinator.
 
 ### 4.6 Optional directional spraying
 - Where a coarse gradient exists (e.g. "toward a known LoRa gateway" or "toward a fixed relay
@@ -139,7 +156,7 @@ Reasoning:
   "signed, not encrypted" property is exactly right: no confidentiality is needed or wanted for a
   public bootstrap artifact, only tamper-evidence, which the signature already provides
   independent of the transport layer.
-- A **shorter TTL** than other broadcast civic classes is appropriate: a stale prekey bundle
+- A **shorter TTL** than ordinary broadcast traffic is appropriate: a stale prekey bundle
   either fails signature verification against a *rotated* signed prekey (harmless, `initiate`
   just returns an error) or, worse, references a one-time prekey the publisher already consumed
   responding to someone else (also harmless, `respond` simply won't have that secret, and X3DH
@@ -159,8 +176,8 @@ made" here.
 
 The LoRa backbone has a tiny bit-rate, so over LoRa the engine:
 
-- forwards **only small, high-priority classes** (direct messages, posts, short text) by
-  default;
+- forwards **only small, `Urgent`/`Elevated`-priority envelopes** by default, whatever
+  addressing mode or content they carry;
 - keeps bulk payloads (images) on BLE/Wi-Fi;
 - applies stricter TTL/hop budgets and respects the IN865 **duty-cycle** limits (see
   `HARDWARE-LORA.md`).

@@ -202,18 +202,18 @@ mod tests {
         let _ = std::fs::remove_file(&path);
         let key = [2u8; 32];
         let low = env(Priority::Low, 8, 9_999_999_999, 10);
-        let sos = env(Priority::Sos, 8, 9_999_999_999, 11);
+        let urgent = env(Priority::Urgent, 8, 9_999_999_999, 11);
 
         {
             let mut store = DurableStore::open(&path, key, 1, 0).unwrap();
             assert_eq!(store.accept(low.clone(), 0).unwrap(), Accept::New);
-            // Store full at capacity 1; SOS must evict the Low envelope, on disk too.
-            assert_eq!(store.accept(sos.clone(), 0).unwrap(), Accept::New);
+            // Store full at capacity 1; Urgent must evict the Low envelope, on disk too.
+            assert_eq!(store.accept(urgent.clone(), 0).unwrap(), Accept::New);
         }
 
         let reopened = DurableStore::open(&path, key, 10, 0).unwrap();
         assert_eq!(reopened.len(), 1);
-        assert!(reopened.contains(&sos.id));
+        assert!(reopened.contains(&urgent.id));
         assert!(!reopened.contains(&low.id)); // evicted envelope must not resurrect on reload
 
         let _ = std::fs::remove_file(&path);

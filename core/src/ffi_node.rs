@@ -85,7 +85,7 @@ impl FfiMeshNode {
         Ok(())
     }
 
-    /// A locally-originated envelope (the user composed a message, an SOS, etc.). Persists it
+    /// A locally-originated envelope (the user composed a message, a post, etc.). Persists it
     /// and floods it to every currently-connected peer automatically.
     pub fn compose_local(&self, envelope_bytes: Vec<u8>, now: u64) -> Result<Accept, FfiError> {
         let envelope = Envelope::from_bytes(&envelope_bytes)?;
