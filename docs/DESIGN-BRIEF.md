@@ -10,10 +10,11 @@ because there is no server to pressure or subpoena. My inspiration is Bitchat, J
 Bluetooth-mesh messenger. I built Betar for Gen Z, for journalists, for activists, and for
 anyone who wants real freedom of speech.
 
-I built 4 visual-direction concepts in `docs/design-concepts/`, each applying a different
-design system to the same screen set below. **I picked Civic Calm (Concept D)** as the locked
-direction, decided 2026-10-31. The other 3 stay in `docs/design-concepts/` as a record of what
-I considered, not as live options.
+I built 4 visual-direction concepts, each applying a different design system to the same
+screen set below. **I picked Civic Calm (Concept D)** as the locked direction, decided
+2026-10-31. All 4 live in the [`betar` repo's `docs/design-concepts/`
+folder](https://github.com/konkomaji/betar/tree/main/docs/design-concepts), not here. This is
+the protocol repo; app-design artifacts belong with the app.
 
 ---
 
@@ -145,8 +146,9 @@ no-developer-byline rule. Credit me by name now, every time, with that link.
 palette (sage, warm cream, soft charcoal, one gentle accent), generous whitespace, calm rounded
 shapes, gentle elevation. Built to feel like a trustworthy civic service, not a hacker tool or a
 protest app, so a wider range of people, not just activists, feel safe using it. Full spec and
-a working mobile mockup are in `docs/design-concepts/betar-design-D-civic-calm.html`. The other
-3 concepts considered and not picked:
+a working mobile mockup are in the `betar` repo at
+[`docs/design-concepts/betar-design-D-civic-calm.html`](https://github.com/konkomaji/betar/blob/main/docs/design-concepts/betar-design-D-civic-calm.html).
+The other 3 concepts considered and not picked:
 
 - **Ground Signal**: dark, terminal and mesh-radio aesthetic, one signal-green accent.
 - **Open Wire**: bright, familiar to Instagram/X users, keeps Betar's existing brand blue
