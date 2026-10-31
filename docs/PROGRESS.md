@@ -2131,3 +2131,37 @@ acquired). Docs-only, no code, nothing to test without a physical board.
 summarizing every commit since the 0.1.2 tag: the QR/safety-code work, the full back-arrow pass
 across two sessions, and the "+"-hidden-behind-SOS bug fix. Version bumped in
 `android/app/build.gradle.kts` (`versionCode` 3→4, `versionName` 0.1.2→0.1.3-prealpha).
+
+**Gap in this log: 2026-07-28 through 2026-10-30 have no entries here**, even though real
+work happened in that window (the `project-mesh`/`betar` repo split, the `betarcomms` org
+creation, all three Pages sites going live, the android/metadata cleanup, a new Project Mesh
+logo). Not backfilling it retroactively -- noted here plainly instead of pretending the log is
+complete, per this file's own append-only, honest-gaps convention.
+
+## 2026-10-31 -- betarcomms org deleted, both repos moved back to the personal account
+
+**User decision: no more org/"enterprise" overhead.** `project-mesh` and `betar` were both
+transferred from `betarcomms` back to the personal `konkomaji` GitHub account via the API
+(`POST /repos/{owner}/{repo}/transfer`). The two other repos the org held, `betarchat`
+(placeholder site only, no app code) and `demo-repository` (GitHub's own auto-created sample
+repo), were deleted outright rather than moved, since neither held real content. The
+`betarcomms` org itself, now empty, was deleted by the user directly through GitHub's web
+settings (no API endpoint exists for org deletion).
+
+**Every live link updated to match, in both repos.** In `project-mesh`: `README.md`, the
+Pages site (`docs/index.html`, `docs/llms.txt`, `docs/robots.txt`, `docs/sitemap.xml`), and
+`docs/BETAR-TRANSITION.md` (added a new "Part 1a" recording current state; left Part 1's
+historical "Decided" table reading `betarcomms`, since that genuinely was the org name when
+those entries were written -- rewriting history to match today would have been the dishonest
+move). In `betar` (fixed via a throwaway clone, since it isn't checked out alongside this
+repo): the `core` submodule URL in `.gitmodules`, `README.md`, `CONTRIBUTING.md`,
+`SECURITY.md`, the F-Droid metadata file, and every page of its own Pages site. Local git
+remotes in this working copy (`origin`, `betar-origin`) repointed at `konkomaji/project-mesh`
+and `konkomaji/betar`. Local commit identity for this repo also changed to `konkomaji` /
+`konkomaji@gmail.com` per explicit user instruction, and no Claude Code co-author line on any
+commit, per this project's standing rule.
+
+**Not yet done:** the GitHub Pages sites themselves (`betarcomms.github.io/project-mesh`,
+`betarcomms.github.io/betar`) still need confirming live at their new `konkomaji.github.io/...`
+URLs -- GitHub Pages doesn't always carry a custom build over a transfer silently, worth a
+manual check next session rather than assuming it worked.
