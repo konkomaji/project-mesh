@@ -262,3 +262,57 @@ Ratchet Rev 4, RFC 9420), peer-reviewed security papers (CT-RSA 2021, USENIX 202
 cross-checked by 3-vote adversarial verification. The full bibliography is
 in `REFERENCES.md`. A handful of forward-looking items (Session V2, Reticulum governance) are
 current as of late-2025/early-2026 and should be re-checked before publication.
+
+---
+
+## 10. 2026 pivot research: the censorship landscape and comparable projects
+
+I added this section when I decided to pivot Betar from a disaster-response messaging app to a
+censorship-resistant social and chat platform. Method: targeted web search across the current
+censorship landscape and six comparable projects, standard-depth, dated October 2026. Confidence
+is lower than the adversarially-verified findings above, since this was single-pass search, not
+3-vote verification. Treat specific figures here as estimates from the cited source, not
+independently confirmed.
+
+### 10.1 The censorship landscape is current, not historical
+- **Iran:** an 88-day nationwide internet shutdown, the longest Freedom House has recorded in
+  its Freedom on the Net series (source: Freedom House, Freedom on the Net 2026 report).
+- **Russia:** internet and mobile outages since March 2026 at a scale not seen before, with
+  reporting that the Kremlin may be considering a full ban of Telegram (source: CNN, March 2026).
+- **France:** the Prime Minister wrote to the CEOs of the country's four mobile network
+  operators on 22 October 2026, asking them to be ready to block four social media platforms for
+  several hours; the operators said they did not know how to carry out a targeted block of that
+  kind (sources: Reclaim The Net, Archyde; both secondary, not yet corroborated against a primary
+  government document).
+- **Turkey:** a proposed framework would tie social media accounts to a government-run digital
+  identity system under the user's real name.
+- **India, directly relevant to Betar's own design:** the Home Ministry's Cybercrime
+  Coordination Centre ordered GitHub to restrict three Bitchat repositories on or before 3
+  October 2026, arguing the app's anonymous, decentralized architecture obstructs lawful
+  interception (source: TechCrunch, 24 July 2026, reporting an earlier notice; Wikipedia's
+  BitChat article dates the takedown itself to 3 October 2026). Access Now criticized the
+  takedown as turning a shutdown into a full communications blackout. This is the single most
+  directly relevant data point for Betar's own threat model, see `THREAT-MODEL.md` §6-7.
+
+### 10.2 Comparable projects: what I copied and what I rejected
+
+| Project | Mechanism | What I took from it |
+|---|---|---|
+| **Bitchat** (`permissionlesstech/bitchat`, `bitchat-android`) | BLE mesh offline (~30 m/hop, multi-hop to ~300 m), bridged to the public Nostr relay network when any device has internet; geohash-scoped public rooms over Nostr | The whole three-tier shape: local mesh, relay bridge, geohash-scoped rooms. Betar's Feed is this pattern, not an original design. Confirmed actively maintained (commits as recent as August 2026) and audited in part by Cure53. |
+| **Briar** | Tor by default, Bluetooth/Wi-Fi as a blackout fallback; forums (persistent, open-invite), blogs (personal feed readable by contacts) | Confirms the forum/blog shape Betar's Channels and Feed already cover; did not adopt Tor-as-default, since Betar's own design is mesh-primary for the opposite reason (works with zero infrastructure first, bridges to the internet second, rather than the other way around). |
+| **FireChat** (Open Garden, 2014 Hong Kong protests) | Pure BLE mesh, no relay fallback, unencrypted, encouraged real names | A cautionary case, not a pattern to copy. Global Voices' retrospective fact-check found real mesh usage was lower than the 2014 press coverage implied, and that most protesters still defaulted to WhatsApp whenever any internet existed at all. Lesson taken: a hybrid mesh-plus-relay design beats a mesh-only one, because people will not use pure offline mesh as a daily driver, only as a true-outage fallback. Encryption is mandatory in Betar, with no unencrypted mode, in direct response to FireChat's most criticized flaw. |
+| **Session** | Onion routing through 2,000+ independent service nodes, no phone number, keypair-derived ID | Confirms the onion-routing-as-fallback design Betar already had decided independently (see `project_mesh_onion_routing_scope` memory); did not adopt Session's own node network, kept Betar's existing Noise/MLS/PQXDH stack. |
+| **Nostr** | Dumb relay network, reported at 140+ clients and 850+ relays across 40+ countries (source: a vendor glossary, treat as an approximate figure, not independently confirmed) | Adopted directly as Betar's relay-bridge protocol, revising an earlier plan to hand-roll a `libp2p` gossip layer. Reusing an already-live network bootstraps reach on day one. Zaps (Lightning tipping, NIP-57) noted as a real feature, deliberately not built in V1. |
+| **Farcaster** | On-chain identity (FID registered on the Optimism blockchain), off-chain "hubs", Frames/mini-apps | A cautionary case. Ownership changed hands at least twice within under a year as of this research (Neynar, then reportedly Balaji Srinivasan's Network School), and one source reported the protocol pivoting away from a social-first vision toward wallet growth, with its feed criticized for NFT and altcoin promotional spam. Lesson taken: no on-chain or blockchain-based identity in Betar. A dependency on a blockchain or its operator is one more party that can be bought, sold, or regulated, which contradicts the whole point of this pivot. |
+
+### 10.3 Confidence and caveats
+
+Several sources above are secondary (Reclaim The Net, Archyde, a vendor glossary, press
+retrospectives) rather than primary government documents or peer-reviewed material. Figures
+like relay/client counts and weekly active users should be re-verified against primary sources
+before being stated as fact in any public-facing document, the same standard the rest of this
+file already holds itself to.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/).

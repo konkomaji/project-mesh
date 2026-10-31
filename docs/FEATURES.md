@@ -1,82 +1,102 @@
 # Application Features
 
-Companion to `WHITEPAPER.md` §9. Project Mesh is a civic-resilience **platform**, not only a
-messenger. Every feature runs on the single mesh substrate (`ROUTING-PROTOCOL.md`) and uses the
-same cryptography (`CRYPTOGRAPHY.md`).
+I pivoted Betar in October 2026, from a disaster-safety app to a censorship-resistant social
+and chat platform. This document lists what I am building for version 1, and what I decided
+not to build.
+
+Every feature runs on the same mesh substrate (`ROUTING-PROTOCOL.md`) and the same
+cryptography (`CRYPTOGRAPHY.md`) as before. The pivot changed the product, not the protocol.
 
 ---
 
-## 1. Emergency SOS
+## 1. Chat
 
-**Purpose:** get a help request out when nothing else works.
+- **Direct messages.** 1:1, end-to-end encrypted with Noise XX into a Double Ratchet, with
+  X3DH plus PQXDH (ML-KEM-1024) for first contact.
+- **Groups.** MLS (RFC 9420), bounded membership.
+- **Channels.** Argon2id passphrase-derived key, open local topic rooms.
+- **Location sharing.** One-shot only. A user sends their current location once, inside a
+  specific chat thread, through that thread's encrypted channel. I decided against
+  continuous live-location tracking for version 1. See "Not building" below.
 
-- **One-tap** SOS composes a high-priority broadcast envelope (`class = SOS`).
-- Optional **coarse location** (a pin the user confirms; precision is user-controlled for
-  safety).
-- Optional **category** (medical / trapped / fire / violence / other) via icons, so low-literacy
-  users can specify without typing.
-- Routing engine gives SOS **top priority** in contact exchange and in store eviction, and
-  forwards it preferentially to any **LoRa gateway** for long-range escape from a dead zone.
-- Nearby users see an SOS with distance/direction (if location shared) and can acknowledge; an
-  ACK travels back through the mesh.
+## 2. Feed
 
-**Honest limit:** delivery is best-effort; SOS reaches whoever the mesh can carry it to, which
-depends on node density. It is a resilience layer, not a replacement for emergency services
-where they exist.
+- **Geohash-scoped public rooms.** I copied this pattern directly from Bitchat. A room's
+  precision runs from a city block up to a country, and the user picks it.
+- **Local-mesh first.** A post reaches phones in Bluetooth/Wi-Fi Direct range immediately,
+  with no internet required.
+- **Relay-bridged reach.** When any device in a local mesh cluster has internet access, it
+  publishes that cluster's posts to the public Nostr relay network, and pulls down posts for
+  the cluster in return. One device's internet connection, even briefly, extends reach past
+  the local radius for everyone nearby.
+- **No ranking algorithm.** Feed order is reverse-chronological. There is no server to run an
+  engagement-ranking algorithm on, and I decided against building one even where it would be
+  technically possible.
+- **Images.** A post's image attaches as a small, lossy, EXIF-stripped thumbnail over the
+  mesh. The full-resolution file uploads only once a relay bridge exists, to a
+  content-addressed blob store (the Nostr ecosystem's Blossom protocol, or an equivalent),
+  so no single host is required. A mesh-only post stays at thumbnail quality until a relay
+  bridge reaches it.
 
-## 2. Disaster bulletin board
+## 3. Fact-check and illegal-content handling
 
-**Purpose:** spread trustworthy local civic information.
+- **Community Notes model.** Any user can attach a note to a post. Notes are signed events,
+  gossiped the same way posts are.
+- **Decentralized scoring.** The scoring algorithm is public and deterministic. Any client or
+  relay computes the same score locally from the same synced events. No single scorer is
+  authoritative.
+- **Client-side filtering for illegal content.** Betar has no server or relay that can delete
+  a post. Instead, a reported or flagged post can be hidden or warned-on by each user's own
+  client, driven by the same web-of-trust scoring used for fact-checking. I chose this over 2
+  alternatives: full moderation (impossible without a server to run it on) and no moderation
+  at all (Bitchat's current approach, which led to India's government ordering GitHub to
+  restrict 3 Bitchat repositories in July 2026, rather than removing individual posts).
 
-- A **store-and-forward notice board** of local bulletins: relief-camp locations, food/water/
-  medicine availability, road and bridge status, shelter openings, missing-person notices.
-- Each bulletin is **signed by the poster's key**; bulletins from **known responder keys**
-  (e.g. a verified NGO or camp coordinator) can be visually distinguished and endorsed.
-- Bulletins carry TTL so stale information ages out.
-- Readable by anyone nearby (public class), so information spreads without requiring prior
-  contact.
+## 4. Security
 
-## 3. Offline maps
+- **End-to-end encryption everywhere**, including Feed posts, not only direct messages.
+  Betar has no unencrypted mode.
+- **Panic wipe.** A hold-to-confirm gesture erases all local data immediately.
+- **Pubkey identity only.** Betar requires no phone number and no email address.
 
-**Purpose:** situational awareness with no internet and no Google.
+## 5. Transport
 
-- **OpenStreetMap** vector tiles rendered by **MapLibre GL Native**, fully offline from
-  pre-downloaded **regional tile packs** (MBTiles / PMTiles). No network calls, no Google Maps.
-- Tile packs for at-risk regions can be bundled or side-loaded, and shared **device-to-device
-  over Wi-Fi Direct** (bulk transport) so one downloaded map seeds a whole area.
-- Users drop and share **pins over the mesh**: safe zones, relief points, water, hazards,
-  blocked roads, medical help. Pins are envelopes like any other and propagate through the mesh.
+- **Local mesh.** Bluetooth Low Energy and Wi-Fi Direct, with store-carry-forward gossip. A
+  message or post does not need sender and recipient to ever be in range at the same time. It
+  needs a chain of pairwise range overlaps over time, the same way a phone carried between 2
+  locations bridges them.
+- **Relay bridge.** The Nostr protocol, not a custom gossip layer. Bitchat, my stated
+  inspiration, already runs on real Nostr relays. Reusing the existing network means Betar's
+  online tier works from day 1, with no new infrastructure required.
 
-## 4. Community resource board
+## 6. Distribution
 
-**Purpose:** match needs and offers locally.
+- **F-Droid and direct APK first.** App stores are themselves a ban chokepoint a government
+  can pressure. Betar's store listing comes later, as a convenience channel, never as the
+  only path to install it.
 
-- A local **"have / need"** exchange: food, shelter, transport, tools, blood donors, charging
-  points, labour.
-- Useful in **ordinary rural life** (not only disasters), which is deliberate: the platform
-  earns daily use so it is present and understood when a crisis hits.
-- Entries are signed, categorized by icon, and TTL-bounded.
+## 7. Not building
 
-## 5. Messaging
+I decided against each of the following, with the reason stated:
 
-- **Direct** (1:1), end-to-end via Double Ratchet, optional onion routing.
-- **Group** (bounded membership), per-member sealed copies.
-- **Channel** (passphrase-derived key), owner-less, for open local topics.
-- **Broadcast** ("everyone nearby"), public local messages.
-- All messages are store-and-forward; recipients receive them whenever the mesh delivers,
-  possibly after a delay.
+- **Blockchain or on-chain identity.** Farcaster tied its identity to the Optimism
+  blockchain, and the protocol itself sold twice in under a year. A blockchain dependency is
+  one more thing a government or a buyer can capture. It contradicts the point of Betar.
+- **Interactive mini-apps or post "frames."** Farcaster's frames turned its feed into a
+  platform for NFT and token promotion, not better discourse. I am not building a programmable
+  post format.
+- **An unencrypted or public-only mode.** FireChat shipped without encryption and encouraged
+  real names. That design was its most-cited criticism. Betar encrypts everything, with no
+  exception.
+- **Continuous live-location tracking.** This is the single highest-risk feature for a
+  journalist or an activist. A compromised device or a compromised recipient exposes
+  real-time whereabouts. Version 1 ships one-shot location sharing only. A continuous version
+  needs its own safety design, including geofencing and auto-expiry, before I build it.
 
-## 6. Voice notes and small images
+## 8. What stayed the same
 
-- **Voice notes** are first-class, because they serve **low-literacy** users directly.
-- **Small images** (compressed) where transport allows; large media prefers Wi-Fi Direct.
-- Both respect the routing engine's priority and size rules; over LoRa, media is not forwarded
-  (bit-rate too low), only text/SOS/bulletins.
+- **Envelope format and routing engine**, shared by every feature above, same as before the
+  pivot.
+- **Offline-first behaviour.** No feature blocks on having a network connection.
 
-## 7. Cross-cutting behaviour
-
-- **Priority:** SOS > bulletin > resource/map > direct/group > channel/broadcast chatter, in
-  both transfer order and eviction.
-- **Everything is an envelope:** SOS, pins, bulletins, and messages share one wire format and
-  one routing engine, keeping the system small and auditable.
-- **Everything works offline-first:** no feature blocks on connectivity.
+Developed by [Konko Maji](https://konkomaji.com/)

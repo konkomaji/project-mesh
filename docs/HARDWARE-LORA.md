@@ -16,7 +16,7 @@ regulatory constraints.
 - **Long range:** kilometres line-of-sight; useful non-line-of-sight range from hundreds of
   metres to low kilometres depending on terrain and settings.
 - **Very low power:** nodes can run on small solar panels and batteries.
-- **Very low bit-rate** (≈0.3–27 kbit/s): fine for text, SOS, and bulletins; unsuitable for
+- **Very low bit-rate** (≈0.3–27 kbit/s): fine for text and short messages; unsuitable for
   media (which stays on BLE/Wi-Fi).
 - **Mature open ecosystem:** the **Meshtastic** project already implements LoRa mesh on
   inexpensive boards and supports India's frequency region.
@@ -72,8 +72,8 @@ Roles:
 
 - The phone pairs with its node over BLE/USB; the Project Mesh core treats the node as just
   another `MeshTransport` (see `ARCHITECTURE.md` §3).
-- Over the LoRa link the core forwards **only small, high-priority classes** (SOS, bulletins,
-  short text). Bulk data never touches LoRa.
+- Over the LoRa link the core forwards **only small, high-priority classes** (direct messages,
+  posts, short text). Bulk data never touches LoRa.
 - Envelopes cross freely between the phone mesh and the LoRa mesh at any phone-plus-node point,
   so a message can originate on a phone, hop across a valley over LoRa, and be delivered to
   another phone on the far side.
@@ -90,7 +90,8 @@ Roles:
 ## 6. Deployment model
 
 - **Community-owned:** nodes are built and maintained by local communities, NGOs, and
-  volunteers, matching the civic, decentralized ethos and avoiding any central operator.
+  volunteers, matching the decentralized, no-single-operator ethos and avoiding any central
+  operator.
 - **Documentation and kits:** open build guides, bills of materials, and recommended
   configurations for the IN865 band, so a community can stand up a backbone without deep RF
   expertise.
@@ -157,3 +158,7 @@ both a mesh-peer BLE role and a LoRa-node BLE role simultaneously), and whether 
 a from-scratch minimal firmware or a Meshtastic plugin/module -- both are real engineering
 decisions that need a board in hand to prototype against, not something to freeze from documentation
 alone.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/)

@@ -1,8 +1,8 @@
 # Threat Model
 
-Companion to `WHITEPAPER.md` §4. This document states who we defend against, what we protect,
-what attacks we consider, how we mitigate them, and, critically, what we do **not** defend
-against. Honesty about non-goals is a core project value.
+Companion to `WHITEPAPER.md` §4. I wrote this document to state who Betar defends against, what
+it protects, what attacks I considered, how I mitigate them, and, critically, what I do **not**
+defend against. Honesty about non-goals is a core value of this project.
 
 ---
 
@@ -16,6 +16,15 @@ against. Honesty about non-goals is a core project value.
 | **Identity** | Linking a key or device to a real person |
 | **Device data at rest** | Everything above, if a device is seized |
 
+**A note on location sharing specifically.** Betar ships one-shot location sharing in V1, sent
+only through the existing end-to-end channel of one specific chat. I deliberately do not ship
+continuous live-location tracking in V1. A continuous feed of a user's real-time position is the
+single highest-risk feature I could add for a journalist or activist user: if the recipient's
+device is compromised, or the recipient themselves is coerced, a live feed exposes where that
+user is right now, not just where they were at one past moment. A one-shot share has the same
+endpoint-compromise exposure as any other message, no more. I will not add continuous live
+tracking until it has its own dedicated design for geofencing and automatic expiry.
+
 ## 2. Adversaries **in scope**
 
 ### A1: Passive local eavesdropper
@@ -28,7 +37,7 @@ Sniffs BLE / Wi-Fi / LoRa within radio range.
   layer, **bypassing MAC-address randomization entirely**. A **~$150 software-defined radio**
   suffices, and phones advertise constantly (an idle iPhone emits ~872 BLE advertisements per
   minute). Reliability is **limited** (thermal drift, chipset variation, configurable TX power,
-  cheap-receiver noise), so it is **feasible-but-not-always-reliable**, not guaranteed. **We
+  cheap-receiver noise), so it is **feasible-but-not-always-reliable**, not guaranteed. **I
   cannot fully defend against this.** MAC rotation raises the bar against casual tracking; it does
   **not** make a device untrackable by a determined local RF adversary. No "untraceable" claim is
   made anywhere in this project.
@@ -41,8 +50,9 @@ Runs altered software to **inject**, **drop**, **replay**, **flood**, or **corru
 
 ### A3: Local active attacker
 Attempts **jamming** or **Sybil flooding** to deny service locally.
-- **Mitigations (partial):** priority eviction keeps SOS moving under pressure; rate limits and
-  puzzles raise Sybil cost; LoRa backbone provides an alternative path on a different band.
+- **Mitigations (partial):** priority eviction keeps urgent traffic (direct messages ahead of
+  bulk feed sync) moving under pressure; rate limits and puzzles raise Sybil cost; LoRa backbone
+  provides an alternative path on a different band.
 - Deliberate **radio jamming** of the 2.4 GHz band (BLE/Wi-Fi) is a physical attack no app can
   fully defeat; the sub-GHz LoRa backbone (Phase 3) is a mitigation because it uses a different
   band, not a cure.
@@ -87,6 +97,8 @@ No user should be misled about these:
 | Seize device | A5 | At-rest encryption, panic-wipe, duress | Forensic w/ unlocked device (out of scope) |
 | Recover past msgs after key leak | n/a | Forward secrecy (ratchet) | None |
 | Read future msgs after key leak | n/a | Post-compromise security (ratchet) | Window before self-heal |
+| Illegal content spreads (CSAM, doxxing, terrorism material) | A2, A4, structural | Client-side filtering via the Community Notes web-of-trust layer; relay operators may independently refuse to carry flagged content | No server or relay can delete a post everywhere once it has spread; a government may respond by banning the whole app or repo instead of one post (see below) |
+| App or repo itself targeted for a ban | n/a, structural | F-Droid + direct APK as the primary distribution channel, not app-store-only | A government can still block GitHub, F-Droid mirrors, or ISPs directly; not fully defended |
 
 ## 5. Trust model
 
@@ -96,15 +108,54 @@ No user should be misled about these:
   to request, seize, or leak from a server, because no such server or data store exists. This is
   a structural property of the design, not a policy promise (see `COMPLIANCE.md`).
 
-## 6. Abuse and moderation (an open problem)
+## 6. Abuse, illegal content, and moderation
 
-A server-less network cannot centrally moderate. Our partial answers:
+A server-less network cannot centrally moderate. No relay or server in this design can delete a
+post everywhere once the mesh and the Nostr relay bridge have spread it. I decided on this
+policy instead, after looking at what happened to a comparable project with no moderation at
+all:
 
-- **No global amplification:** messages spread locally and expire; there is no viral broadcast
-  reach, which structurally limits spam and disinformation blast radius.
-- **Local blocking and key reputation:** users block keys; nodes can locally de-prioritize or
-  drop traffic from keys they have blocked; signed-bulletin classes allow responder endorsement.
-- **Rate limits and puzzles** raise the cost of automated abuse.
+- **Client-side filtering via Community Notes.** Any user can attach a note to a post. Notes and
+  their ratings are signed events, synced the same way posts are. The scoring algorithm is public
+  and deterministic, so any client computes the same score from the same data, with no central
+  verdict. A post flagged as illegal or harmful can be locally hidden or warned-on by each user's
+  own client. This does not delete the post from the network. It removes it from view for users
+  whose client applies the score, without creating a new party who can be pressured to delete
+  content everyone sees.
+- **Relay-level opt-out.** A relay operator can refuse to carry specific content on their own
+  relay, the same way real Nostr relay operators already do today. This does not guarantee a
+  post disappears everywhere, since another relay may still carry it, but it means no single
+  relay operator is forced to carry everything either.
+- **Rate limits and puzzles** raise the cost of automated abuse and flooding, same as before.
+- **Local blocking and key reputation:** users can block keys; clients can locally de-prioritize
+  or drop traffic from blocked keys.
 
-This is acknowledged as **incomplete**; decentralized moderation is a genuine open research
-problem, listed among the limitations in `WHITEPAPER.md` §15.
+**The honest limit, stated plainly: none of this is content removal.** A government cannot force
+Betar to take down one post, because there is no server to serve that order to. Bitchat, the
+project that inspired Betar's mesh-plus-relay design, ran into exactly this in July 2026: India's
+Home Ministry did not ask for one post removed, it ordered GitHub to restrict three Bitchat
+repositories entirely, arguing the architecture itself made lawful interception impossible.
+Betar carries the same structural property and the same structural risk. I am not hiding that
+trade-off. A network nobody can censor one message on is also a network nobody can be forced to
+remove the worst message from, and the response a government has available is to target the
+whole app instead of one post. This is acknowledged as an open problem, not a solved one, and is
+also listed among the limitations in `WHITEPAPER.md` §15.
+
+## 7. Distribution as an attack surface
+
+An app store is a single party a government can pressure to remove an app, the same structural
+weakness a server has. Bitchat was removed from Google Play and the Apple App Store in India on
+3 October 2026, and from the Apple App Store in China in April 2026, before this document was
+written. Betar's primary distribution channel is F-Droid and a direct APK download, not an app
+store listing. A store listing may exist later as a convenience, never as the only path to
+install Betar.
+
+## 8. What this threat model does not claim
+
+No independent security audit of Betar has happened yet. Nothing in this document, or anywhere
+else in this project, should be read as a claim that one has. An audit is a hard gate before any
+public claim of security, not a step I have completed.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/).

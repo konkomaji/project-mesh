@@ -2165,3 +2165,72 @@ commit, per this project's standing rule.
 `betarcomms.github.io/betar`) still need confirming live at their new `konkomaji.github.io/...`
 URLs -- GitHub Pages doesn't always carry a custom build over a transfer silently, worth a
 manual check next session rather than assuming it worked.
+
+## 2026-10-31 -- full product pivot: Betar becomes a censorship-resistant social and chat
+## platform, docs rewritten, this repo's own website removed
+
+**The single biggest change this project has made since it started.** Betar stops being a
+disaster-safety-infrastructure app and becomes a censorship-resistant social and chat
+platform: an Instagram/X-style feed plus strong direct/group/channel chat, positioned so no
+government or platform operator can remove a post or ban an account, because there is no
+server to pressure. Stated inspiration: Bitchat (Jack Dorsey's BLE-mesh messenger). Full
+reasoning, the viability research (current 2026 government crackdowns: Iran's 88-day
+shutdown, Russia's outages, France's October carrier-block request, India's Bitchat GitHub
+takedown), and the comparative feature research across Bitchat/Briar/FireChat/Session/Nostr/
+Farcaster all happened in conversation, not repeated here in full.
+
+**V1 feature set decided:** Direct/Group/Channel chat (reused from the existing core),
+geohash-scoped Feed rooms bridged to the real Nostr relay network (not a custom protocol,
+reuses Bitchat's own live network), Community Notes-style fact-checking with client-side
+illegal-content filtering (no server-side takedown exists, each client can locally hide or
+warn on flagged content instead), images as mesh-local thumbnails with full resolution only
+once a relay bridge exists, and one-shot (not continuous) location sharing inside encrypted
+chat threads. Blockchain/on-chain identity, interactive mini-apps, and unencrypted modes were
+all explicitly rejected, with reasoning tied to real failure cases (Farcaster changed
+ownership twice in under a year; FireChat's lack of encryption was its biggest documented
+flaw).
+
+**Disaster-safety features completely removed, not repurposed:** SOS, the disaster bulletin
+board, the community resource board, and offline maps are gone from every doc and every
+design mockup.
+
+**Four visual-direction design-system concepts built, unslopped, and compared** (Ground
+Signal, Open Wire, Samizdat, Civic Calm), each a full self-contained HTML mockup with a
+design-system spec plus a tappable mobile app structure (Opening/onboarding, Feed, Nearby,
+Chats, Chat thread, Post detail with Community Notes, Profile, Legal & Policies), in
+`docs/design-concepts/`. **Civic Calm (Concept D) picked as the locked design direction.**
+Its opening-screen tagline is the canonical one-line pitch going forward: "Social and chat
+that keeps working, no matter who tries to shut it off."
+
+**Nearly every doc in `docs/` rewritten or edited for the pivot:** README.md, ARCHITECTURE.md,
+DESIGN-BRIEF.md, FEATURES.md, ROADMAP.md, THREAT-MODEL.md rewritten fresh in first person
+(Konko's own voice, matching the new standing attribution rule below). IMPLEMENTATION-STATUS.md
+and RESEARCH-FINDINGS.md kept their existing verified technical content and had disaster rows
+removed plus pivot rows added, rather than being discarded wholesale, since they're precision
+test/citation ledgers, not framing prose. TRANSPORT.md, ROUTING-PROTOCOL.md, HARDWARE-LORA.md,
+GOVERNANCE.md, REFERENCES.md, DISTRIBUTION.md, and LOCALIZATION-UX.md got a lighter edit,
+stripping disaster-specific examples while keeping their real technical/governance content
+intact. `PROGRESS.md` and `BETAR-TRANSITION.md` were deliberately left untouched beyond new
+dated entries, since they're append-only historical logs, not current-state specs.
+
+**Attribution rule reversed, explicit user instruction:** every doc now credits "Developed by
+Konko Maji" linking `https://konkomaji.com/`. This replaces the older "no individual developer
+named" rule from the Betar rebrand.
+
+**This repository's own website removed entirely.** `docs/index.html`, `llms.txt`,
+`robots.txt`, `sitemap.xml`, and `.nojekyll` are deleted, and GitHub Pages is disabled for this
+repo via the API. The user's instruction: project-mesh is a protocol and code repository with
+no website of its own, the only live website for this project lives on the `betar` repo.
+README.md's link to the old `konkomaji.github.io/project-mesh` site was replaced with links to
+the `betar` repo and its website instead. Also removed: `docs/chat-transcribe.txt`, a stray
+pasted-terminal-output file that had been sitting in the repo since 2026-07-27, unrelated to
+any real content.
+
+**Known follow-up work, not done yet:** `docs/WHITEPAPER.md` was missed from this pass and
+likely still has old disaster-framing language. The Rust `core/` wire-format envelope enum
+still literally contains `SOS | BULLETIN | MAP_PIN` even though every doc now describes
+`DIRECT | GROUP | CHANNEL | BROADCAST | POST | NOTE` -- that mismatch is a real code change
+still needed, not just a documentation one. `HARDWARE-LORA.md` has a pre-existing stale
+package-id reference (`india.projectmesh.app`, should be `app.betar.comm`) unrelated to this
+pivot, left alone. The betar repo's own website content still needs a full positioning/content
+pass for the new pivot, separate from this repo's docs.

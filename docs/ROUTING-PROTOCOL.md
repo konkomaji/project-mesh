@@ -32,8 +32,8 @@ Envelope (conceptual layout)
 ┌───────────────────────────────────────────────────────────────┐
 │ version           u8                                           │
 │ envelope_id       32 bytes   (content-derived, e.g. BLAKE3)    │  ← dedup key
-│ class             u8         (SOS | BULLETIN | DIRECT | GROUP | │
-│                               CHANNEL | BROADCAST | MAP_PIN)    │  ← priority hint only
+│ class             u8         (DIRECT | GROUP | CHANNEL |        │
+│                               BROADCAST | POST | NOTE)          │  ← priority hint only
 │ created_at        u64        (coarse timestamp, minutes)       │
 │ expires_at        u64        (absolute expiry)                 │  ← TTL (time)
 │ hops_remaining    u8         (decremented per relay)           │  ← TTL (hops)
@@ -47,9 +47,9 @@ Notes:
 
 - **`envelope_id`** is derived from the sealed content, so it is stable, self-certifying against
   accidental corruption, and usable as the deduplication key.
-- **`class`** gives relays a *priority* hint (SOS first) but never reveals plaintext. Optionally,
-  class can be coarsened or hidden for higher metadata protection at some routing-efficiency
-  cost.
+- **`class`** gives relays a *priority* hint (direct and group messages first) but never reveals
+  plaintext. Optionally, class can be coarsened or hidden for higher metadata protection at some
+  routing-efficiency cost.
 - **`routing_tag`** carries either a channel selector (for channel traffic) or a Sphinx onion
   header (for onion-routed direct messages); for plain broadcast it is empty.
 
@@ -64,13 +64,13 @@ A → B :  SUMMARY {bloom_filter_of_A_envelope_ids, high_water}
 B → A :  SUMMARY {bloom_filter_of_B_envelope_ids, high_water}
 A → B :  WANT {ids A lacks that B appears to have}   (from B's summary)
 B → A :  WANT {ids B lacks that A appears to have}
-A ⇄ B :  DATA {requested envelopes, priority-ordered: SOS → bulletin → …}
+A ⇄ B :  DATA {requested envelopes, priority-ordered: direct/group → post → note → …}
 ```
 
 - **Summary vectors** are **Bloom filters** (compact, false-positive-only) plus a small explicit
   recent-ID list to bound false positives on hot items.
-- Transfers are **priority-ordered** so that in a short or lossy contact window, emergency
-  traffic moves first.
+- Transfers are **priority-ordered** so that in a short or lossy contact window, real-time
+  chat traffic moves first.
 - Both sides enforce all controls in §4 on every accepted envelope.
 
 ## 4. Flood and abuse controls
@@ -88,9 +88,9 @@ Naïve epidemic routing is expensive and trivially floodable. Controls:
   and breaks loops.
 
 ### 4.3 Bounded store with priority eviction
-- The store has a fixed byte budget *(tunable)*. When full, eviction favours keeping high-priority
-  (SOS, bulletin) and fresh envelopes and dropping low-priority, near-expiry, or widely-seen
-  ones first.
+- The store has a fixed byte budget *(tunable)*. When full, eviction favours keeping
+  high-priority and fresh envelopes and dropping low-priority, near-expiry, or widely-seen ones
+  first.
 
 ### 4.4 Rate limiting
 - Per-peer caps on envelopes/second and bytes/second during a contact, to stop a single peer
@@ -100,11 +100,11 @@ Naïve epidemic routing is expensive and trivially floodable. Controls:
 - Optional **client puzzle** (small proof-of-work) bound to `envelope_id` and `created_at`,
   raising the cost of mass-producing distinct envelopes. Calibrated to be negligible for a human
   sending a message and expensive for a flood. *(tunable / optional.)*
-- Per-identity signing on non-anonymous classes (e.g. signed bulletins) lets nodes locally
+- Per-identity signing on non-anonymous classes (e.g. signed posts) lets nodes locally
   rate-limit or block abusive keys without any central coordinator.
 
 ### 4.6 Optional directional spraying
-- Where a coarse gradient exists (e.g. "toward a known LoRa gateway" or "toward a relief-camp
+- Where a coarse gradient exists (e.g. "toward a known LoRa gateway" or "toward a fixed relay
   node"), a node can bias forwarding (Spray-and-Wait / PRoPHET style) to cut redundant copies,
   without maintaining full routing state. Pure epidemic remains the fallback.
 
@@ -124,8 +124,8 @@ Cryptographic detail for each is in `CRYPTOGRAPHY.md`.
 **Decided:** a device's current `PrekeyBundle` (`CRYPTOGRAPHY.md` §4.2: signed prekey + at most
 one one-time prekey, the whole point being to let someone bootstrap a session with a peer who is
 never simultaneously in range) travels as an ordinary **Broadcast** envelope, magic-byte-prefixed
-exactly like the civic-post classes (SOS/bulletin/resource board) already are, rather than as a
-new `Addressing` variant. Reasoning:
+exactly like the other envelope classes already are, rather than as a new `Addressing` variant.
+Reasoning:
 
 - In-person exchange (alongside the identity fingerprint, for trust verification) only works
   when both parties *are* simultaneously in range, which defeats the actual point of X3DH, so it
@@ -159,8 +159,9 @@ made" here.
 
 The LoRa backbone has a tiny bit-rate, so over LoRa the engine:
 
-- forwards **only small, high-priority classes** (SOS, bulletin, short text) by default;
-- keeps bulk payloads (images, map packs) on BLE/Wi-Fi;
+- forwards **only small, high-priority classes** (direct messages, posts, short text) by
+  default;
+- keeps bulk payloads (images) on BLE/Wi-Fi;
 - applies stricter TTL/hop budgets and respects the IN865 **duty-cycle** limits (see
   `HARDWARE-LORA.md`).
 
@@ -172,3 +173,7 @@ The LoRa backbone has a tiny bit-rate, so over LoRa the engine:
   ACK back through the mesh, giving the sender eventual (not immediate) delivery confirmation.
 - Delivery ratio and latency depend heavily on node density and mobility; these are the primary
   quantities the simulation harness (`ARCHITECTURE.md` §7) measures.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/)

@@ -25,20 +25,21 @@ not afterthoughts.
 - **Right-to-left** and mixed-script handling where relevant (e.g. Urdu), if and when that
   language arrives as a community contribution.
 - Every language past the two defaults is **community-contributed** through the open
-  localization workflow, with a glossary so safety-critical terms (SOS, help, water, danger)
-  are consistent.
+  localization workflow, with a glossary so safety-critical terms (panic wipe, verify, block,
+  report) are consistent.
 
 ## 2. Low-literacy first
 
-Reading fluency must **not** be a prerequisite for calling for help or understanding a bulletin.
+Reading fluency must **not** be a prerequisite for posting, chatting, or understanding a
+fact-check note.
 
-- **Icon-led navigation:** primary actions (SOS, message, map, resources) are large, labelled
+- **Icon-led navigation:** primary actions (post, chat, nearby mesh, profile) are large, labelled
   icons.
 - **Voice notes** as a first-class input and output, so users can speak and listen instead of
   read and type.
 - **Audio prompts / text-to-speech** (offline where a libre engine exists) for key flows.
-- **Pictographic categories** for SOS type and resource type (medical cross, water drop, fire,
-  shelter), so a tap conveys meaning without words.
+- **Pictographic status** for mesh and relay state (connected, carrying, bridged to relay), so a
+  glance conveys meaning without words.
 - **Minimal text, high contrast, large targets.**
 
 ## 3. Low-end devices
@@ -66,14 +67,16 @@ India's volume market is inexpensive Android phones. Targets:
 
 ## 5. Safety-aware UX
 
-- **Location is opt-in and coarse by default**, with clear control, because precise location can
-  endanger users in some scenarios.
+- **Location is opt-in and one-shot, never continuous by default**, with clear control, because
+  precise or continuous location can endanger an activist or journalist.
 - **Relay mode is explicit and visible**, so users always know when their device is
   participating and spending battery.
 - **Panic / duress** controls (see `CRYPTOGRAPHY.md`) are reachable but guarded against accidental
   triggering.
 - **Plain-language privacy explanations** in the user's language: what the app does and does not
   know, and its limits, drawn from the threat model.
+- **Fact-check status is visible, never a verdict.** A Community Notes-style label shows a post
+  has been rated, never "true" or "false" as if from a single authority.
 
 ## 6. Trust and onboarding
 
@@ -82,3 +85,7 @@ India's volume market is inexpensive Android phones. Targets:
 - **In-person verification** via QR / safety string is presented as a simple "scan to add a
   trusted contact" flow, not as cryptographic jargon.
 - First-run explains, simply, that the app works without internet and how to help the mesh.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/).

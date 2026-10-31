@@ -83,9 +83,9 @@ This is the single most important transport constraint and is stated without eup
 
 ### 3.3 How Project Mesh designs around it
 
-- **Relay mode UX.** In gatherings, relief camps, or dead zones, the app guides iOS users to
-  keep it open and screen-on ("relay mode"), clearly indicating that the phone is actively
-  helping the network. This is a deliberate, honest UX pattern, not a workaround claim.
+- **Relay mode UX.** In gatherings or dead zones, the app guides iOS users to keep it open and
+  screen-on ("relay mode"), clearly indicating that the phone is actively helping the network.
+  This is a deliberate, honest UX pattern, not a workaround claim.
 - **iOS clusters use MultipeerConnectivity.** Among iOS devices, MPC provides much better
   peer-to-peer behaviour than raw background BLE.
 - **Android carries the background backbone.** Android devices, via a foreground service, relay
@@ -95,9 +95,9 @@ This is the single most important transport constraint and is stated without eup
 
 ## 4. Wi-Fi Direct / Aware (Android)
 
-For payloads too large for comfortable BLE transfer (offline **map tile packs**, images, voice
-notes), Android devices negotiate a higher-throughput **Wi-Fi Direct** or **Wi-Fi Aware (NAN)**
-link, transfer the bulk data, and tear it down. Discovery can be bootstrapped over BLE.
+For payloads too large for comfortable BLE transfer (full-resolution **images**, voice notes),
+Android devices negotiate a higher-throughput **Wi-Fi Direct** or **Wi-Fi Aware (NAN)** link,
+transfer the bulk data, and tear it down. Discovery can be bootstrapped over BLE.
 
 ## 5. LoRa backbone (Phase 3)
 
@@ -107,8 +107,8 @@ in `HARDWARE-LORA.md`. Transport-relevant points:
 - A phone pairs with a **companion LoRa node** (ESP32 + LoRa radio) over BLE or USB-serial.
 - The node speaks LoRa to other nodes, forming a long-range backbone (village, valley, camp).
 - The core bridges envelopes between the phone mesh and the LoRa mesh at any phone-plus-node
-  point, respecting LoRa's tiny bit-rate by forwarding only small, high-priority payloads (SOS,
-  bulletins, text) over the radio and keeping bulk data on Wi-Fi/BLE.
+  point, respecting LoRa's tiny bit-rate by forwarding only small, high-priority payloads
+  (direct messages, posts, short text) over the radio and keeping bulk data on Wi-Fi/BLE.
 - **India band:** LoRa here uses the licence-free **865–868 MHz (IN865)** band with the Indian
   regulator's power and duty-cycle limits, a hard constraint distinct from EU/US bands.
 
@@ -119,3 +119,7 @@ in `HARDWARE-LORA.md`. Transport-relevant points:
 - Indian budget Android devices ship aggressive background-process killers (Xiaomi/MIUI, realme,
   vivo, Oppo/ColorOS, Samsung). The app detects these and guides users through the
   vendor-specific battery-whitelisting steps needed for reliable background relay.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/)

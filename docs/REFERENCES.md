@@ -125,3 +125,7 @@ These were fetched and adversarially verified against primary text:
 pointers; before publication each pointer should be re-checked for current URL, edition, and
 accuracy. Forward-looking items (Session V2, Reticulum governance) are current as of
 late-2025/early-2026 and should be re-verified.
+
+---
+
+Developed by [Konko Maji](https://konkomaji.com/).
