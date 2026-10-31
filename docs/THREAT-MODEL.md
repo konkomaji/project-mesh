@@ -64,7 +64,7 @@ An intermediate node trying to learn **who is talking to whom**.
 
 ### A5: Coercive physical adversary
 Seizes and attempts to search a device.
-- **Mitigations:** encryption at rest (SQLCipher + keystore/Secure Enclave); optional passphrase;
+- **Mitigations:** encryption at rest (`redb` + AEAD, Keystore-wrapped); optional passphrase;
   **panic-wipe** and optional **duress passphrase** (decoy state).
 - Against a well-resourced forensic adversary with an unlocked device or a device-OS exploit, no
   application-level measure is a guarantee.
