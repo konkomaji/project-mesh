@@ -1,5 +1,5 @@
 <div align="center">
-<img src="docs/assets/mesh-logo.svg" width="108" height="108" alt="Project Mesh">
+<img src="docs/assets/mesh-banner.png" width="100%" alt="Project Mesh: the protocol behind Betar, a social and chat network no government can switch off.">
 
 # Project Mesh
 
