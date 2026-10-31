@@ -2234,3 +2234,61 @@ still needed, not just a documentation one. `HARDWARE-LORA.md` has a pre-existin
 package-id reference (`india.projectmesh.app`, should be `app.betar.comm`) unrelated to this
 pivot, left alone. The betar repo's own website content still needs a full positioning/content
 pass for the new pivot, separate from this repo's docs.
+
+## 2026-10-31 -- Civic Calm mockup finished in detail: identity system, new-chat flow, content
+## limits, fonts, About screen
+
+**Four follow-up rounds on `docs/design-concepts/betar-design-D-civic-calm.html`, the locked
+design, same day as the pivot above.**
+
+**Round 2 (all 4 concepts, before picking one):** a real alignment bug was found by direct
+visual inspection in concept B (Open Wire) -- icon and label pairs crammed together with no
+flex gap. Fixed there and audited for the same pattern across all 4 concepts. Added an
+app-opening/onboarding screen and a Legal & Policies screen (Privacy, Terms, Content Policy)
+to all 4, since neither existed anywhere before this round.
+
+**Civic Calm picked as the locked direction.** Opening screen tagline set to the user's exact
+wording: "Social and chat that keeps working, no matter who tries to shut it off."
+`docs/DESIGN-BRIEF.md` updated to point at it as locked, the other 3 concepts kept in
+`docs/design-concepts/` as a record of what was considered.
+
+**Identity system added to the locked file:** a 6-character alphanumeric ID shown at
+onboarding, explicitly a fingerprint of the real keypair, not a separately issued number (36^6
+is not large enough to be collision-free at scale if issued independently). A separate,
+editable, non-unique display username (3-8 characters, letters and digits plus `.` and `_`)
+sits next to it in Profile. Panic wipe and uninstall-reinstall both retire the ID completely
+and generate a brand new one, stated plainly in the panic wipe copy and in a new "How Betar
+works" guide screen.
+
+**Content limits added:** posts and comments capped at 280 characters. A Community Note now
+requires 2 source links plus a 150-character explanation before it can be submitted, shown
+directly on the post detail screen next to the note itself.
+
+**New chat/group/channel flow added**, reachable from a FAB on the Chats screen that
+previously did nothing: add a contact by scanning a QR code (with a manual ID-entry fallback),
+create a group with a member list, create or join a passphrase-protected channel. A matching
+new-post composer was added for Feed too, since its own FAB had the same gap -- no destination
+screen -- until this pass. Both gaps were found by an explicit completeness sweep across every
+feature decided in conversation, not assumed to already be covered.
+
+**About screen added:** version number, changelog, source link, open-source license list,
+security contact, and the attribution line, answering a direct question about what a FOSS
+Android app conventionally needs to keep track of (checked against this repo's actual root
+files: `CHANGELOG.md` and `LICENSE` exist here, `CONTRIBUTING.md`/`SECURITY.md` exist in the
+`betar` repo instead).
+
+**Fonts changed from an unchosen system-font stack to a real choice:** Noto Sans as the base
+body/UI font (required anyway, since Noto Sans Bengali is the locked requirement for Bengali
+support in `docs/DESIGN-BRIEF.md` section 6, and Poppins would have silently broken that).
+Poppins applied only to the two brand-wordmark moments (onboarding, the Feed header) as a
+deliberate accent, not throughout. Loaded via Google Fonts for this HTML mockup's convenience;
+the real shipped app must still bundle font files locally, same as everything else, to keep
+working with zero network.
+
+**Also fixed in passing:** an em dash in the file's own `<title>` tag, missed by every earlier
+pass since it wasn't in visible body copy.
+
+**Not started yet:** the actual implementation. Everything above is still a static HTML
+mockup, not Kotlin/Compose code. The Rust `core/` envelope enum fix noted earlier in this file
+is still the first real code change needed, and the `betar` Android app repo is not cloned
+into this session at all yet.

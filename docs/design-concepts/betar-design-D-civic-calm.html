@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Betar — Civic Calm Design System</title>
+<title>Betar: Civic Calm Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#FAF6EF;
@@ -36,7 +39,7 @@
   *{box-sizing:border-box;}
   body{
     margin:0;
-    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-family:"Noto Sans",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--cream);
     color:var(--ink);
     padding:var(--space-6) var(--space-5) 100px;
@@ -167,6 +170,7 @@
   .screen.active{display:flex;opacity:1;}
   .screen-top{padding:40px var(--space-4) var(--space-3);background:var(--cream);flex-shrink:0;}
   .screen-top .app-row{display:flex;justify-content:space-between;align-items:center;}
+  .screen-top .app-row h2{font-family:"Poppins",sans-serif;}
   .screen-top h2{font-size:20px;font-weight:600;margin:0;}
   .screen-top .sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
   .screen-body{flex:1;overflow-y:auto;padding:0 var(--space-4) var(--space-4);position:relative;}
@@ -240,6 +244,9 @@
   .note-card .note-title{font-size:12px;font-weight:600;color:#8A5B27;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
   .note-card .note-title svg{width:14px;height:14px;}
   .note-card .note-text{font-size:12.5px;line-height:1.5;color:var(--ink);margin-bottom:10px;}
+  .note-links{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+  .note-link{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sage-dark);text-decoration:none;}
+  .note-link svg{flex-shrink:0;}
   .note-prov{font-size:10.5px;color:var(--ink-soft);margin-bottom:10px;line-height:1.5;font-variant-numeric:tabular-nums;}
   .note-rate{display:flex;gap:8px;}
   .rate-btn{flex:1;border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:7px;font-size:11px;font-weight:600;color:var(--ink-soft);cursor:pointer;text-align:center;transition:background-color .15s var(--ease);}
@@ -265,7 +272,7 @@
   /* onboarding */
   .onboard{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 var(--space-6);text-align:center;}
   .onboard-mark{width:72px;height:72px;margin-bottom:var(--space-5);}
-  .onboard-word{font-size:30px;font-weight:600;letter-spacing:-0.01em;margin:0 0 var(--space-3) 0;}
+  .onboard-word{font-family:"Poppins",sans-serif;font-size:30px;font-weight:600;letter-spacing:-0.01em;margin:0 0 var(--space-3) 0;}
   .onboard-line{font-size:15px;line-height:1.55;color:var(--ink-soft);max-width:280px;margin:0 0 var(--space-6) 0;}
   .onboard-note{display:flex;gap:10px;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:var(--space-4);margin-bottom:var(--space-3);width:100%;max-width:300px;}
   .onboard-note svg{width:18px;height:18px;color:var(--sage-dark);flex-shrink:0;margin-top:1px;}
@@ -414,8 +421,13 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               <p>Your identity is a private key stored only on this device. No phone number, no email, nothing to hand over.</p>
             </div>
+            <div class="status-card" style="width:100%;max-width:300px;box-sizing:border-box;">
+              <div><p class="label">Your ID</p><p class="detail">Generated just now, permanent on this device</p></div>
+              <span class="pill connected" style="font-family:ui-monospace,Consolas,monospace;letter-spacing:0.5px;">A3F9K2</span>
+            </div>
             <div class="onboard-cta">
               <button class="btn btn-primary" onclick="openScreen('feed')">Get started</button>
+              <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:var(--space-3);" onclick="openGuide('onboarding')">How it works</button>
             </div>
           </div>
         </div>
@@ -447,7 +459,7 @@
               </div>
               <div class="post-actions"><span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>18</span><span class="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>3</span></div>
             </div>
-            <button class="fab" title="New post, attach an image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
+            <button class="fab" title="New post, attach an image" onclick="openScreen('newpost')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
           <div class="tabbar">
             <button class="tab-btn active" onclick="setTab(this,'feed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9h14v-9"/></svg><span>Feed</span></button>
@@ -508,6 +520,7 @@
               <div class="avatar"></div>
               <div class="meta"><div class="name-line"><span class="name">rupa.k</span><span class="time">3h</span></div><p class="preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Got it, thank you</p></div>
             </div>
+            <button class="fab" title="New chat, group or channel" onclick="openScreen('newchat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
           <div class="tabbar">
             <button class="tab-btn" onclick="setTab(this,'feed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9h14v-9"/></svg><span>Feed</span></button>
@@ -555,10 +568,14 @@
             <p class="post-body" style="font-size:14px;">Reports say the downtown transit line has been suspended since this morning.</p>
             <div class="note-card">
               <p class="note-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Community note</p>
-              <p class="note-text">Transit authority confirms partial suspension on one line only, not the full network. Source linked by three contributors.</p>
+              <p class="note-text">Transit authority confirms only one line paused for maintenance, not the full network. Full service resumes by evening per the operator's own statement.</p>
+              <div class="note-links">
+                <a href="#" class="note-link"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.5-1.5"/></svg>citytransit.gov/alerts</a>
+                <a href="#" class="note-link"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.5-1.5"/></svg>localnews.example/transit-update</a>
+              </div>
               <p class="note-prov">Added by 3 contributors · rated helpful by 214 readers, not helpful by 12</p>
               <div class="note-rate"><button class="rate-btn">Helpful</button><button class="rate-btn">Not helpful</button></div>
-              <p class="explainer">No single moderator wrote this verdict. Visibility runs on a public scoring rule anyone can read and recompute.</p>
+              <p class="explainer">No single moderator wrote this verdict. Visibility runs on a public scoring rule anyone can read and recompute. Every note needs at least 2 source links and a 150 character explanation before it can be submitted.</p>
             </div>
           </div>
         </div>
@@ -567,16 +584,32 @@
         <div class="screen" id="screen-profile">
           <div class="screen-top"><h2>Profile</h2><p class="sub">Your device, your keys, your mesh</p></div>
           <div class="screen-body">
-            <div class="profile-head"><div class="avatar"></div><p class="handle">rupa.k</p><p class="tag2">No phone number, no email, key-based identity</p></div>
+            <div class="profile-head">
+              <div class="avatar"></div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <p class="handle">rupa.k</p>
+                <button aria-label="Edit username" style="background:none;border:none;padding:2px;cursor:pointer;color:var(--ink-soft);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+              </div>
+              <p class="tag2" style="font-family:ui-monospace,Consolas,monospace;">ID A3F9K2 &middot; permanent on this device</p>
+              <p class="tag2">No phone number, no email, key-based identity</p>
+            </div>
             <div class="status-card"><div><p class="label"><span class="dot"></span>Local mesh</p><p class="detail">4 peers in range</p></div><span class="pill connected">Active</span></div>
             <div class="status-card"><div><p class="label"><span class="dot"></span>Relay bridge</p><p class="detail">Connected via 1 relay</p></div><span class="pill connected">Online</span></div>
             <div class="safety-card">
               <p class="stitle">Panic wipe</p>
-              <p class="sdesc">Instantly erases local messages, posts and keys from this device. Cannot be undone, and nothing is sent anywhere first.</p>
+              <p class="sdesc">Instantly erases every message, post and key on this device and permanently retires ID A3F9K2. Reopening Betar afterward creates a brand new ID from nothing. Cannot be undone, and nothing is sent anywhere first.</p>
               <button class="btn btn-danger" style="width:100%;justify-content:center;">Wipe this device now</button>
             </div>
-            <button class="legal-row" onclick="openScreen('legal')" style="margin-top:var(--space-5);">
+            <button class="legal-row" onclick="openGuide('profile')" style="margin-top:var(--space-5);">
+              <span>How Betar works</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <button class="legal-row" onclick="openScreen('legal')">
               <span>Legal and policies</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <button class="legal-row" onclick="openScreen('about')">
+              <span>About Betar</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
@@ -613,6 +646,191 @@
           </div>
         </div>
 
+        <!-- GUIDE (overlay) -->
+        <div class="screen" id="screen-guide">
+          <div class="detail-header">
+            <button class="back-btn" onclick="closeGuide()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">How Betar works</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <div class="legal-section">
+              <h3>Local mesh</h3>
+              <p>Your phone talks directly to nearby phones over Bluetooth and Wi-Fi. No internet needed. Messages hop from phone to phone to reach further than your own radio range.</p>
+            </div>
+            <div class="legal-section">
+              <h3>Relay bridge</h3>
+              <p>The moment any one phone nearby reaches the internet, even briefly, it bridges everything to the open relay network and back. You never need your own internet, only someone near you, eventually, does.</p>
+            </div>
+            <div class="legal-section">
+              <h3>Feed rooms</h3>
+              <p>Posts live in location-scoped rooms, for example #oldtown or #citycenter, not one giant global feed. Chronological only. Nothing is ranked or boosted by an algorithm.</p>
+            </div>
+            <div class="legal-section">
+              <h3>Community notes</h3>
+              <p>Anyone can attach a note to a post. A public, shared scoring method decides which notes rise, not a moderator team, so no single person decides what counts as true.</p>
+            </div>
+            <div class="legal-section">
+              <h3>Your ID</h3>
+              <p>A short code like A3F9K2, generated from your device's private key the first time you open Betar. It cannot be changed, and it is not tied to your name, phone number or email.</p>
+              <p>You can also set a display name in Profile, 3 to 8 characters, letters and digits plus . and _ only. It is a nickname only, shown next to your ID, and is not guaranteed to be unique to you.</p>
+            </div>
+            <div class="legal-section">
+              <h3>Panic wipe</h3>
+              <p>Erases everything on this device and retires your ID for good. Opening Betar again after that starts over completely, with a brand new ID. The same thing happens if you uninstall and reinstall the app.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABOUT (overlay) -->
+        <div class="screen" id="screen-about">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">About Betar</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <div class="legal-section" style="text-align:center;">
+              <svg width="48" height="48" viewBox="0 0 72 72" fill="none" style="margin-bottom:var(--space-3);">
+                <circle cx="36" cy="36" r="34" stroke="var(--border)" stroke-width="2"/>
+                <circle cx="36" cy="36" r="22" stroke="var(--sage)" stroke-width="2"/>
+                <circle cx="36" cy="36" r="9" fill="var(--sage-dark)"/>
+              </svg>
+              <p style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:600;margin:0 0 2px 0;">Betar</p>
+              <p class="note-prov" style="margin:0;">Version 0.2.0 &middot; build 2026-10-31</p>
+            </div>
+            <div class="legal-section">
+              <h3>Free and open source</h3>
+              <p>Licensed AGPL-3.0-or-later. The full source, every commit, and the build instructions are public.</p>
+            </div>
+            <button class="legal-row"><span>Changelog</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+            <button class="legal-row"><span>Source code</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+            <button class="legal-row"><span>Open-source licenses</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+            <button class="legal-row"><span>Report a security issue</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+            <div class="legal-section" style="margin-top:var(--space-5);">
+              <p class="note-prov" style="margin:0;">Developed by Konko Maji</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW POST (overlay) -->
+        <div class="screen" id="screen-newpost">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('feed')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">New post</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Posting to</p>
+            <div class="tags" style="display:flex;gap:6px;margin-bottom:var(--space-4);">
+              <span class="chip" style="background:var(--sage-dark);color:#fff;">#oldtown &middot; block</span>
+              <span class="chip">#citycenter &middot; city</span>
+              <span class="chip">#region</span>
+            </div>
+            <textarea placeholder="What's happening" style="width:100%;min-height:96px;padding:11px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius-s);resize:none;">Extra flyers for Thursday's meeting are at the corner shop, grab a stack if you're passing.</textarea>
+            <p class="note-prov" style="text-align:right;margin-top:4px;">92 / 280</p>
+            <button class="legal-row" style="margin-top:var(--space-3);">
+              <span>Attach an image</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </button>
+            <p class="explainer" style="margin:var(--space-2) 0 var(--space-5);">An attached image sends as a small preview over the mesh. Full resolution reaches people once a relay bridge is reached, yours or theirs.</p>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;">Post</button>
+          </div>
+        </div>
+
+        <!-- NEW CHAT (overlay) -->
+        <div class="screen" id="screen-newchat">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('chats')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">New chat</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <button class="legal-row" onclick="openScreen('qr')">
+              <span>Add a contact with a QR code</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <button class="legal-row" onclick="openScreen('newgroup')">
+              <span>Create a group</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <button class="legal-row" onclick="openScreen('newchannel')">
+              <span>Create or join a channel</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- QR ADD CONTACT (overlay) -->
+        <div class="screen" id="screen-qr">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('newchat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">Add a contact</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);text-align:center;">
+            <p class="note-prov" style="margin-bottom:var(--space-3);">Your code, for them to scan</p>
+            <div style="width:160px;height:160px;margin:0 auto var(--space-4);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);display:flex;align-items:center;justify-content:center;">
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                <rect x="4" y="4" width="34" height="34" rx="3" stroke="var(--ink)" stroke-width="5"/>
+                <rect x="82" y="4" width="34" height="34" rx="3" stroke="var(--ink)" stroke-width="5"/>
+                <rect x="4" y="82" width="34" height="34" rx="3" stroke="var(--ink)" stroke-width="5"/>
+                <rect x="50" y="4" width="10" height="10" fill="var(--ink)"/>
+                <rect x="66" y="20" width="10" height="10" fill="var(--ink)"/>
+                <rect x="50" y="36" width="10" height="10" fill="var(--ink)"/>
+                <rect x="50" y="66" width="10" height="10" fill="var(--ink)"/>
+                <rect x="66" y="82" width="10" height="10" fill="var(--ink)"/>
+                <rect x="82" y="66" width="10" height="10" fill="var(--ink)"/>
+                <rect x="98" y="98" width="18" height="18" fill="var(--ink)"/>
+              </svg>
+            </div>
+            <p class="note-prov" style="font-family:ui-monospace,Consolas,monospace;margin-bottom:var(--space-5);">ID A3F9K2</p>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:var(--space-3);">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+              Scan their code
+            </button>
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Or enter their ID by hand</p>
+            <input placeholder="6 character ID" style="width:100%;padding:11px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius-s);margin-bottom:var(--space-3);">
+            <button class="btn btn-secondary" style="width:100%;justify-content:center;">Add contact</button>
+            <p class="explainer" style="margin-top:var(--space-4);">Scanning in person confirms you are talking to the right key, not an impersonator. This is the same safety-number check other encrypted apps use, just read by camera instead of typed out.</p>
+          </div>
+        </div>
+
+        <!-- NEW GROUP (overlay) -->
+        <div class="screen" id="screen-newgroup">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('newchat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">Create a group</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Group name</p>
+            <input placeholder="For example, study circle" style="width:100%;padding:11px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius-s);margin-bottom:var(--space-4);">
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Members</p>
+            <div class="chat-row"><div class="avatar"></div><div class="meta"><p class="name" style="margin:0;">rupa.k</p></div></div>
+            <div class="chat-row"><div class="avatar"></div><div class="meta"><p class="name" style="margin:0;">arvind.m</p></div></div>
+            <button class="legal-row" onclick="openScreen('qr')">
+              <span>Add a member with a QR code</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:var(--space-5);">Create group</button>
+            <p class="explainer" style="margin-top:var(--space-3);">Every member's device holds the group key. There is no group owner's server to lose or hand over.</p>
+          </div>
+        </div>
+
+        <!-- NEW CHANNEL (overlay) -->
+        <div class="screen" id="screen-newchannel">
+          <div class="detail-header">
+            <button class="back-btn" onclick="openScreen('newchat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <p style="font-size:14px;font-weight:600;margin:0;">Create or join a channel</p>
+          </div>
+          <div class="screen-body" style="padding-top:var(--space-4);">
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Channel name</p>
+            <input placeholder="For example, northside-watch" style="width:100%;padding:11px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius-s);margin-bottom:var(--space-4);">
+            <p class="note-prov" style="margin-bottom:var(--space-2);">Passphrase</p>
+            <input type="password" placeholder="Shared with whoever should join" style="width:100%;padding:11px 14px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:var(--radius-s);margin-bottom:var(--space-4);">
+            <div style="display:flex;gap:var(--space-3);">
+              <button class="btn btn-primary" style="flex:1;justify-content:center;">Create</button>
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Join existing</button>
+            </div>
+            <p class="explainer" style="margin-top:var(--space-4);">A channel has no invite list and no owner. Anyone who knows the name and the passphrase can join. Share the passphrase the same way you would share a Wi-Fi password.</p>
+          </div>
+        </div>
+
       </div>
 
       <div class="phone-notes">
@@ -625,6 +843,12 @@
           <li>The pin button in a chat thread sends a one time location, not a continuous live share.</li>
           <li>Nearby shows local mesh peers as a small network graph plus relay bridge status in plain language.</li>
           <li>Profile carries the panic wipe control, kept visually distinct and separate from ordinary settings.</li>
+          <li>Onboarding shows the auto-generated ID (for example A3F9K2) the moment it exists. It is permanent on this device, derived from the real private key, not a separately issued number.</li>
+          <li>The display name next to the ID (for example rupa.k) is an editable nickname only, 3 to 8 characters, letters and digits plus . and _. It is not guaranteed unique, since no server exists to check that.</li>
+          <li>"How it works" opens from onboarding or from Profile and explains the mesh, the relay bridge, feed rooms, Community Notes and the ID system in plain language.</li>
+          <li>Panic wipe and an uninstall-reinstall both end the same way: everything on the device is gone, and the next launch creates a brand new ID from nothing.</li>
+          <li>Posts and comments are capped at 280 characters.</li>
+          <li>A Community Note needs at least 2 source links plus a 150 character explanation before it can be submitted, shown on the post detail screen.</li>
         </ul>
       </div>
 
@@ -644,9 +868,17 @@
       if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'" + name + "'") > -1){ b.classList.add('active'); }
     });
   }
+  var guideReturnTo = 'onboarding';
   function openScreen(name){
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
     document.getElementById('screen-' + name).classList.add('active');
+  }
+  function openGuide(returnTo){
+    guideReturnTo = returnTo;
+    openScreen('guide');
+  }
+  function closeGuide(){
+    openScreen(guideReturnTo);
   }
 </script>
 </body>
