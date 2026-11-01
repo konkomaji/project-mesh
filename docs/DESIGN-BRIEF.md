@@ -160,7 +160,10 @@ The locked system needs:
 1. A full light and dark theme.
 2. A type scale with a 16sp body base.
 3. A reserved danger colour, used only for the panic wipe control (see section 5, rule 4).
-4. Noto Sans, plus Noto Sans Bengali, bundled with the app so Bengali text renders correctly.
+4. Noto Sans as the base font. The app ships English-only for now (Bengali paused, not
+   dropped, see `docs/LOCALIZATION-UX.md`), so Noto Sans Bengali is not a current packaging
+   requirement, but Noto Sans was picked specifically because it covers Bengali too, so no
+   font swap is needed if Bengali ships later.
 
 ## 7. The logo
 
